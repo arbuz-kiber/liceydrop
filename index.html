@@ -269,6 +269,28 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
 .authNote{color:var(--dim);font-size:11px;margin-top:12px;line-height:1.4}
 .who{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px}
 .who b{color:var(--text)}
+
+/* ---------- leaderboard ---------- */
+.lbTabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.lbTab{padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer}
+.lbTab.active{border-color:var(--accent);color:var(--text)}
+.lbList{display:flex;flex-direction:column;gap:8px}
+.lbRow{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);cursor:pointer}
+.lbRow:hover{border-color:var(--accent)}
+.lbRow .rank{width:26px;text-align:center;font-weight:800;color:var(--dim)}
+.lbRow.top1 .rank{color:#ffcb52}
+.lbRow .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lbRow .val{font-weight:700}
+.lbRow .sub{display:block;font-size:11px;color:var(--dim)}
+#profOverlay{position:fixed;inset:0;z-index:220;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(6,8,12,.9);backdrop-filter:blur(8px)}
+#profOverlay.show{display:flex}
+.profCard{width:min(460px,100%);background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.profCard h3{font-size:20px;margin-bottom:14px}
+.profGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.profGrid div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px}
+.profGrid .l{font-size:10.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
+.profGrid .v{font-size:15px;font-weight:700;margin-top:4px;word-break:break-word}
+
 </style>
 </head>
 <body>
@@ -356,6 +378,19 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </section>
 </div>
 
+<section class="panel" style="margin-top:18px">
+  <h3>🏆 Таблица лидеров</h3>
+  <div class="lbTabs" id="lbTabs">
+    <div class="lbTab active" data-lb="upgrade">Лучший апгрейд</div>
+    <div class="lbTab" data-lb="drop">Лучший дроп с кейса</div>
+    <div class="lbTab" data-lb="money">Больше всего денег</div>
+    <div class="lbTab" data-lb="cases">Больше всего кейсов</div>
+    <div class="lbTab" data-lb="upgrades">Больше всего апгрейдов</div>
+  </div>
+  <div class="lbList" id="lbList"><div class="empty">Загрузка…</div></div>
+  <div style="margin-top:12px"><button class="btn" id="lbRefresh" style="width:100%">Обновить</button></div>
+</section>
+
 <footer>
   Licey Drop — развлекательный симулятор апгрейда. Никаких реальных денег и настоящих ставок.<br>
   Все «предметы» — шуточные карточки учителей, шансы выпадения показаны честно.
@@ -372,6 +407,14 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
     <p class="authOk" id="authOk"></p>
     <button class="btn primary" id="authBtn">🎮 Войти / Зарегистрироваться</button>
     <p class="authNote" id="authNote">Если ника нет в базе — аккаунт создастся автоматически, а текущий прогресс из этого браузера перенесётся в него.</p>
+  </div>
+</div>
+
+<div id="profOverlay">
+  <div class="profCard">
+    <h3 id="profName">Игрок</h3>
+    <div class="profGrid" id="profGrid"></div>
+    <button class="btn primary" id="profClose" style="width:100%">Закрыть</button>
   </div>
 </div>
 
@@ -456,16 +499,16 @@ function imgFallback(img){
 const CASES = [
   {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:200,
    desc:"Дёшево, и почти треть учителей в нём стоит дороже самого кейса.",
-   tier:{common:76.83,rare:16.97,epic:4.63,mythic:1.23,legendary:0.27,exotic:0.054,secret:0.0116,glitch:0.0039}},
+   tier:{common:71.5,rare:19.8,epic:6.2,mythic:1.85,legendary:0.5,exotic:0.1,secret:0.035,glitch:0.015}},
   {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:750,
    desc:"Упор на редких и эпических — окупаемость держится около трети открытий.",
-   tier:{common:46,rare:26.23,epic:18.51,mythic:6.94,legendary:1.77,exotic:0.39,secret:0.116,glitch:0.039}},
+   tier:{common:40.5,rare:27.5,epic:21,mythic:8.3,legendary:2.2,exotic:0.5,secret:0.15,glitch:0.05}},
   {id:"director",name:"Кейс директора",emoji:"🎓",price:4500,
    desc:"Мифика и легендарные — основной улов, окупаемость почти у каждого третьего.",
-   tier:{common:29.02,rare:13.89,epic:21.6,mythic:20.83,legendary:10.03,exotic:3.47,secret:0.93,glitch:0.23}},
+   tier:{common:23.5,rare:13,epic:22.5,mythic:23,legendary:12,exotic:4.4,secret:1.25,glitch:0.35}},
   {id:"secret",name:"Секретный кейс",emoji:"🔮",price:35000,
    desc:"Топ лицея встречается чаще всего — окупаемость на том же уровне.",
-   tier:{common:26.81,rare:2.98,epic:7.42,mythic:13.38,legendary:20.06,exotic:18.58,secret:8.18,glitch:2.6}}
+   tier:{common:21.5,rare:2.5,epic:6.5,mythic:13,legendary:21.5,exotic:21,secret:10,glitch:3.5}}
 ];
 const RARITY_ORDER = ["common","rare","epic","mythic","legendary","exotic","secret","glitch"];
 CASES.forEach(c=>{
@@ -485,11 +528,17 @@ const caseById = id => CASES.find(c=>c.id===id);
 const col = r => getComputedStyle(document.documentElement).getPropertyValue('--c-'+r).trim();
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 
+const defStats = () => ({
+  spent:0, casesOpened:0, bestPrice:0, bestName:"",
+  upgrades:0, upgradesWon:0,
+  bestUpgradePrice:0, bestUpgradeName:"", bestUpgradeFrom:"", bestUpgradeChance:0,
+  bestDropPrice:0, bestDropName:""
+});
 const S = {
   bal: 400, inv: [], from: [], to: null, toMut: null, tabMult: null,
   spinning: false, caseSpinning: false, active: null, rot: 0, feed: [],
   freeTaken: 0,
-  stats: {spent:0, casesOpened:0, bestPrice:0, bestName:""}
+  stats: defStats()
 };
 const $ = i => document.getElementById(i);
 
@@ -512,7 +561,7 @@ function applyState(d){
   S.inv = Array.isArray(d.inv) ? d.inv : [];
   S.feed = Array.isArray(d.feed) ? d.feed : [];
   S.freeTaken = d.freeTaken || 0;
-  S.stats = Object.assign({spent:0,casesOpened:0,bestPrice:0,bestName:""}, d.stats||{});
+  S.stats = Object.assign(defStats(), d.stats||{});
 }
 function localState(){
   try{ return JSON.parse(localStorage.getItem(LS_STATE)||'null'); }catch(e){ return null; }
@@ -602,7 +651,7 @@ async function handleAuth(){
     }else{
       // регистрация: переносим прогресс из этого браузера, если он был
       const guest = localState();
-      const startState = hasProgress(guest) ? {bal:guest.bal, inv:guest.inv||[], feed:guest.feed||[], freeTaken:guest.freeTaken||0, stats:guest.stats||{spent:0,casesOpened:0,bestPrice:0,bestName:""}} : snapshot();
+      const startState = hasProgress(guest) ? {bal:guest.bal, inv:guest.inv||[], feed:guest.feed||[], freeTaken:guest.freeTaken||0, stats:Object.assign(defStats(), guest.stats||{})} : snapshot();
       const { data: created, error: insErr } = await sbc.from(TABLE)
         .insert([{ name, password: pass, state: startState, balance: startState.bal }])
         .select().single();
@@ -770,7 +819,7 @@ function chanceOf(){
   const tBase = S.to ? variant(byId(S.to), S.toMut) : null;
   if(!fBase||!tBase||fPrice<=0) return {c:0,m:0,f:fBase,t:tBase,fPrice,cash};
   const m = tBase.price / fPrice;
-  const c = Math.min(0.90, (fPrice / tBase.price) * 0.90);
+  const c = Math.min(0.95, (fPrice / tBase.price) * 0.95);
   return {c, m, f:fBase, t:tBase, fPrice, cash};
 }
 function refresh(){
@@ -842,7 +891,7 @@ $('q').addEventListener('input', renderShop);
 $('fromCash').addEventListener('input', refresh);
 $('reset').onclick = ()=>{ if(confirm('Сбросить прогресс?')){
   S.bal=400;S.inv=[];S.from=[];S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
-  S.stats={spent:0,casesOpened:0,bestPrice:0,bestName:""};
+  S.stats=defStats();
   $('fromCash').value=0; refresh(); } };
 
 $('freeBtn').onclick = ()=>{
@@ -901,8 +950,16 @@ $('go').onclick = ()=>{
   $('needle').style.transform = `rotate(${S.rot}deg)`;
   setTimeout(()=>{
     S.spinning = false;
+    S.stats.upgrades = (S.stats.upgrades||0) + 1;
     if(win){
       addToInv(calc.t.id, calc.t.mut);
+      S.stats.upgradesWon = (S.stats.upgradesWon||0) + 1;
+      if(calc.t.price > (S.stats.bestUpgradePrice||0)){
+        S.stats.bestUpgradePrice = calc.t.price;
+        S.stats.bestUpgradeName = calc.t.name + (calc.t.mut?` (${MUT[calc.t.mut].label})`:'');
+        S.stats.bestUpgradeFrom = calc.f ? calc.f.name : '';
+        S.stats.bestUpgradeChance = calc.c;
+      }
       $('status').textContent = `АПГРЕЙД УДАЧНЫЙ — ${calc.t.name}${calc.t.mut?' ('+MUT[calc.t.mut].label+')':''}!`;
       $('status').className='status win';
     }else{
@@ -967,6 +1024,10 @@ function openCase(caseId){
     track.querySelectorAll('.reelItem')[winIndex].classList.add('landed');
     const v = variant(byId(winnerId), winnerMut);
     addToInv(winnerId, winnerMut);
+    if(v.price > (S.stats.bestDropPrice||0)){
+      S.stats.bestDropPrice = v.price;
+      S.stats.bestDropName = v.name + (v.mut?` (${MUT[v.mut].label})`:'');
+    }
     $('reveal').innerHTML = `
       ${avatarHTML(v,'e')}
       <div class="rn">${v.name}${v.mut?` <span class="mutTag ${v.mut}">${MUT[v.mut].label}</span>`:''}</div>
@@ -978,7 +1039,81 @@ function openCase(caseId){
   }, 6300);
 }
 
+/* ---------- таблица лидеров ---------- */
+const LB_MODES = {
+  upgrade:{title:'Лучший апгрейд', val:p=>p.st.bestUpgradePrice||0, sub:p=>p.st.bestUpgradeName
+    ? (p.st.bestUpgradeFrom? p.st.bestUpgradeFrom+' → ':'')+p.st.bestUpgradeName+(p.st.bestUpgradeChance? ' ('+(p.st.bestUpgradeChance*100).toFixed(1).replace(/\.?0+$/,'')+'% шанс)':'')
+    : '—', fmtV:v=>fmt(v)+' ₴'},
+  drop:{title:'Лучший дроп с кейса', val:p=>p.st.bestDropPrice||0, sub:p=>p.st.bestDropName||'—', fmtV:v=>fmt(v)+' ₴'},
+  money:{title:'Больше всего денег', val:p=>p.bal||0, sub:p=>'учителей в инвентаре: '+(p.invCount||0), fmtV:v=>fmt(v)+' ₴'},
+  cases:{title:'Больше всего кейсов', val:p=>p.st.casesOpened||0, sub:p=>'потрачено '+fmt(p.st.spent||0)+' ₴', fmtV:v=>fmt(v)},
+  upgrades:{title:'Больше всего апгрейдов', val:p=>p.st.upgrades||0, sub:p=>'удачных: '+fmt(p.st.upgradesWon||0), fmtV:v=>fmt(v)}
+};
+let lbMode = 'upgrade';
+let lbPlayers = [];
+
+async function loadLeaderboard(){
+  try{
+    const { data, error } = await sbc.from(TABLE).select('id,name,balance,state').limit(300);
+    if(error) throw error;
+    lbPlayers = (data||[]).map(r=>{
+      const s = r.state || {};
+      return {
+        id:r.id, name:r.name,
+        bal: typeof s.bal === 'number' ? s.bal : (r.balance||0),
+        invCount: Array.isArray(s.inv) ? s.inv.length : 0,
+        st: Object.assign(defStats(), s.stats||{})
+      };
+    });
+  }catch(e){ lbPlayers = []; console.error(e); }
+  renderLeaderboard();
+}
+function renderLeaderboard(){
+  const mode = LB_MODES[lbMode];
+  document.querySelectorAll('.lbTab').forEach(el=>el.classList.toggle('active', el.dataset.lb===lbMode));
+  const rows = lbPlayers.slice().sort((a,b)=>mode.val(b)-mode.val(a)).filter(p=>mode.val(p)>0).slice(0,15);
+  $('lbList').innerHTML = rows.length ? rows.map((p,i)=>
+    `<div class="lbRow ${i===0?'top1':''}" data-player="${p.id}">
+       <div class="rank">${i===0?'👑':i+1}</div>
+       <div class="nm"><b>${p.name}</b><span class="sub">${mode.sub(p)}</span></div>
+       <div class="val">${mode.fmtV(mode.val(p))}</div>
+     </div>`).join('')
+    : `<div class="empty">Пока нет результатов в этой номинации.</div>`;
+}
+function showProfile(id){
+  const p = lbPlayers.find(x=>String(x.id)===String(id));
+  if(!p) return;
+  const s = p.st;
+  const winRate = s.upgrades ? Math.round((s.upgradesWon/s.upgrades)*100) : 0;
+  $('profName').textContent = '👤 '+p.name;
+  $('profGrid').innerHTML = [
+    ['Баланс', fmt(p.bal)+' ₴'],
+    ['Учителей в инвентаре', fmt(p.invCount)],
+    ['Лучший апгрейд', s.bestUpgradeName
+      ? `${s.bestUpgradeFrom? s.bestUpgradeFrom+' → ':''}${s.bestUpgradeName} — ${fmt(s.bestUpgradePrice)} ₴${s.bestUpgradeChance? ` (шанс ${(s.bestUpgradeChance*100).toFixed(1).replace(/\.?0+$/,'')}%)`:''}`
+      : '—'],
+    ['Лучший дроп с кейса', s.bestDropName ? `${s.bestDropName} — ${fmt(s.bestDropPrice)} ₴` : '—'],
+    ['Лучшая карточка', s.bestName ? `${s.bestName} — ${fmt(s.bestPrice)} ₴` : '—'],
+    ['Кейсов открыто', fmt(s.casesOpened||0)],
+    ['Апгрейдов сделано', fmt(s.upgrades||0)],
+    ['Удачных апгрейдов', `${fmt(s.upgradesWon||0)} (${winRate}%)`],
+    ['Всего потрачено', fmt(s.spent||0)+' ₴']
+  ].map(([l,v])=>`<div><div class="l">${l}</div><div class="v">${v}</div></div>`).join('');
+  $('profOverlay').classList.add('show');
+}
+document.addEventListener('click', e=>{
+  const tab = e.target.closest('.lbTab');
+  if(tab){ lbMode = tab.dataset.lb; renderLeaderboard(); return; }
+  const row = e.target.closest('[data-player]');
+  if(row){ showProfile(row.dataset.player); return; }
+});
+$('profClose').onclick = ()=>$('profOverlay').classList.remove('show');
+$('profOverlay').onclick = e=>{ if(e.target===$('profOverlay')) $('profOverlay').classList.remove('show'); };
+$('lbRefresh').onclick = ()=>{ $('lbList').innerHTML = '<div class="empty">Загрузка…</div>'; loadLeaderboard(); };
+setInterval(()=>loadLeaderboard(), 60000);
+
 boot();
+loadLeaderboard();
 </script>
 </body>
 </html>
