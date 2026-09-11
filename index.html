@@ -500,7 +500,9 @@ const TABLE = 'licey_drop_users';
 const LS_STATE = 'liceydrop_v3';       // локальный прогресс (в т.ч. гостевой, до аккаунта)
 const LS_USER  = 'liceydrop_user';     // автологин
 
-let userId = null, userName = '';
+let userId = null, userName = '', sessionToken = null, kicked = false, hbTimer = null;
+const newToken = () => (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
+
 
 const snapshot = () => ({bal:S.bal, inv:S.inv, feed:S.feed, freeTaken:S.freeTaken, stats:S.stats});
 function applyState(d){
@@ -520,30 +522,68 @@ function hasProgress(d){
 
 let pushTimer = null;
 async function pushState(){
-  if(!userId) return;
-  await sbc.from(TABLE).update({ state: snapshot(), balance: S.bal, updated_at: new Date().toISOString() }).eq('id', userId);
+  if(!userId || kicked) return;
+  const { data } = await sbc.from(TABLE)
+    .update({ state: snapshot(), balance: S.bal, updated_at: new Date().toISOString() })
+    .eq('id', userId).eq('session_token', sessionToken).select('id');
+  if(!data || !data.length) kickOut();          // сессию забрало другое устройство
 }
 const save = () => {
   try{ localStorage.setItem(LS_STATE, JSON.stringify(snapshot())); }catch(e){}
-  if(!userId) return;
+  if(!userId || kicked) return;
   clearTimeout(pushTimer);
   pushTimer = setTimeout(()=>{ pushState().catch(()=>{}); }, 700);
 };
-window.addEventListener('beforeunload', ()=>{ if(userId) pushState().catch(()=>{}); });
+window.addEventListener('beforeunload', ()=>{ if(userId && !kicked) pushState().catch(()=>{}); });
+
+/* --- одна сессия на аккаунт: вход с нового устройства выкидывает старое --- */
+function kickOut(){
+  if(kicked) return;
+  kicked = true;
+  clearInterval(hbTimer); clearTimeout(pushTimer);
+  userId = null; sessionToken = null;
+  try{ localStorage.removeItem(LS_USER); }catch(e){}
+  S.spinning = false; S.caseSpinning = false;
+  $('authOverlay').classList.add('show');
+  $('who').style.display = 'none';
+  $('logout').style.display = 'none';
+  authOk('');
+  authErr('Этот аккаунт открыли на другом устройстве. Играть можно только в одном месте — войдите снова, чтобы продолжить здесь.');
+  $('authNote').textContent = 'Вход с одного аккаунта возможен только на одном устройстве одновременно.';
+}
+async function claimSession(){
+  sessionToken = newToken();
+  const { error } = await sbc.from(TABLE)
+    .update({ session_token: sessionToken, session_at: new Date().toISOString() })
+    .eq('id', userId);
+  if(error) throw error;
+  clearInterval(hbTimer);
+  hbTimer = setInterval(checkSession, 7000);
+}
+async function checkSession(){
+  if(!userId || kicked) return;
+  const { data, error } = await sbc.from(TABLE).select('session_token').eq('id', userId).maybeSingle();
+  if(error || !data) return;
+  if(data.session_token !== sessionToken) kickOut();
+}
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkSession().catch(()=>{}); });
+
 
 function authErr(msg){ const e=$('authErr'); e.textContent=msg; e.style.display = msg?'block':'none'; }
 function authOk(msg){ const e=$('authOk'); e.textContent=msg; e.style.display = msg?'block':'none'; }
 
-function enterGame(user, remember = true){
-  userId = user.id; userName = user.name;
+async function enterGame(user, remember = true){
+  userId = user.id; userName = user.name; kicked = false;
   if(remember){ try{ localStorage.setItem(LS_USER, JSON.stringify({id:user.id, name:user.name})); }catch(e){} }
   applyState(user.state);
+  await claimSession();
   $('authOverlay').classList.remove('show');
   $('who').style.display = 'flex';
   $('whoName').textContent = userName;
   $('logout').style.display = 'inline-flex';
   refresh();
 }
+
 
 async function handleAuth(){
   const name = $('authName').value.trim();
@@ -556,7 +596,7 @@ async function handleAuth(){
     if(error) throw error;
     if(user){
       if(user.password !== pass){ authErr('Неверный пароль'); return; }
-      enterGame(user);
+      await enterGame(user);
       toast('С возвращением, '+user.name+'!');
     }else{
       // регистрация: переносим прогресс из этого браузера, если он был
@@ -566,7 +606,7 @@ async function handleAuth(){
         .insert([{ name, password: pass, state: startState, balance: startState.bal }])
         .select().single();
       if(insErr) throw insErr;
-      enterGame(created);
+      await enterGame(created);
       toast(hasProgress(guest) ? 'Аккаунт создан — прогресс перенесён' : 'Аккаунт создан');
     }
   }catch(e){
@@ -583,13 +623,14 @@ async function checkAutoLogin(){
   if(!saved || !saved.id) return false;
   const { data: user } = await sbc.from(TABLE).select('*').eq('id', saved.id).maybeSingle();
   if(!user) { localStorage.removeItem(LS_USER); return false; }
-  enterGame(user, false);
+  await enterGame(user, false);
   return true;
 }
 
 function logout(){
   if(!confirm('Выйти из аккаунта? Прогресс сохранён на сервере.')) return;
-  pushState().catch(()=>{}).finally(()=>{
+  clearInterval(hbTimer);
+  pushState().catch(()=>{}).then(()=>sbc.from(TABLE).update({session_token:null}).eq('id',userId).eq('session_token',sessionToken)).catch(()=>{}).finally(()=>{
     localStorage.removeItem(LS_USER);
     location.reload();
   });
