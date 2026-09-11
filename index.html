@@ -277,7 +277,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   <div class="logo"><i></i>LICEY <span>DROP</span></div>
   <div class="bal">
     <div class="who" id="who" style="display:none">👤 <b id="whoName"></b></div>
-    <div class="balance">Баланс <b id="bal">1 000</b></div>
+    <div class="balance">Баланс <b id="bal">400</b></div>
     <button class="btn icon" id="reset" title="Сбросить прогресс">↻</button>
     <button class="btn" id="logout" title="Выйти" style="display:none">Выйти</button>
   </div>
@@ -396,29 +396,30 @@ const TEACHERS = [
   {id:"bogdashevskaya",name:"Богдашевская",rarity:"rare",price:260,png:"cards/Bogdashevskaya-rare.png",emoji:"👩‍🔬"},
   {id:"ovsyannikov",name:"Овсянников",rarity:"rare",price:340,png:"cards/Ovsyannikov-rare.png",emoji:"🧑‍🔬"},
 
-  {id:"alena-i",name:"Алена Игоревна",rarity:"epic",price:450,png:"cards/Alena-Igorevna-epic.png",emoji:"🧙‍♀️"},
-  {id:"olga-v",name:"Ольга Виталиевна",rarity:"epic",price:650,png:"cards/Olga-Vitalievna-epic.png",emoji:"🧙‍♀️"},
-  {id:"nataliya-v",name:"Наталия Валериевна",rarity:"epic",price:900,png:"cards/Nataliya-Valerievna-epic.png",emoji:"🧝‍♀️"},
-  {id:"oksana-i",name:"Оксана Ивановна",rarity:"epic",price:1250,png:"cards/Oksana-Ivanovna-epic.png",emoji:"🧝‍♀️"},
+  {id:"alena-i",name:"Алена Игоревна",rarity:"epic",price:675,png:"cards/Alena-Igorevna-epic.png",emoji:"🧙‍♀️"},
+  {id:"olga-v",name:"Ольга Виталиевна",rarity:"epic",price:975,png:"cards/Olga-Vitalievna-epic.png",emoji:"🧙‍♀️"},
+  {id:"nataliya-v",name:"Наталия Валериевна",rarity:"epic",price:1350,png:"cards/Nataliya-Valerievna-epic.png",emoji:"🧝‍♀️"},
+  {id:"oksana-i",name:"Оксана Ивановна",rarity:"epic",price:1875,png:"cards/Oksana-Ivanovna-epic.png",emoji:"🧝‍♀️"},
 
-  {id:"viktor-v",name:"Виктор Викентиевич",rarity:"mythic",price:1700,png:"cards/Viktor-Vikentievich-mythic.png",emoji:"🧛"},
-  {id:"vera-f",name:"Вера Федоровна",rarity:"mythic",price:2500,png:"cards/Vera-Fyodorovna-mythic.png",emoji:"🧙‍♀️"},
-  {id:"tatyana-l",name:"Татьяна Леонидовна",rarity:"mythic",price:3800,png:"cards/Tatyana-Leonidovna-mythic.png",emoji:"🧞‍♀️"},
+  {id:"viktor-v",name:"Виктор Викентиевич",rarity:"mythic",price:2550,png:"cards/Viktor-Vikentievich-mythic.png",emoji:"🧛"},
+  {id:"vera-f",name:"Вера Федоровна",rarity:"mythic",price:3750,png:"cards/Vera-Fyodorovna-mythic.png",emoji:"🧙‍♀️"},
+  {id:"tatyana-l",name:"Татьяна Леонидовна",rarity:"mythic",price:5700,png:"cards/Tatyana-Leonidovna-mythic.png",emoji:"🧞‍♀️"},
 
-  {id:"ludmila",name:"Людмила",rarity:"legendary",price:5200,png:"cards/Lyudmila-legendary.png",emoji:"👑"},
-  {id:"muntyanu",name:"Мунтяну",rarity:"legendary",price:7800,png:"cards/Muntyanu-legendary.png",emoji:"👑"},
-  {id:"irina-g",name:"Ирина Григориевна",rarity:"legendary",price:12000,png:"cards/Irina-Grigorievna-legendary.png",emoji:"👑"},
+  {id:"ludmila",name:"Людмила",rarity:"legendary",price:11700,png:"cards/Lyudmila-legendary.png",emoji:"👑"},
+  {id:"muntyanu",name:"Мунтяну",rarity:"legendary",price:11700,png:"cards/Muntyanu-legendary.png",emoji:"👑"},
+  {id:"irina-g",name:"Ирина Григориевна",rarity:"legendary",price:27000,png:"cards/Irina-Grigorievna-legendary.png",emoji:"👑"},
 
-  {id:"nat-tech",name:"Наталия Технолоджия",rarity:"exotic",price:18000,png:"cards/Nataliya-Tekhnolodzhiya-exotic.png",emoji:"🤖"},
-  {id:"barabash",name:"Барабаш",rarity:"exotic",price:32000,png:"cards/Barabash-exotic.png",emoji:"🦸"},
+  {id:"nat-tech",name:"Наталия Технолоджия",rarity:"exotic",price:27000,png:"cards/Nataliya-Tekhnolodzhiya-exotic.png",emoji:"🤖"},
+  {id:"barabash",name:"Барабаш",rarity:"exotic",price:48000,png:"cards/Barabash-exotic.png",emoji:"🦸"},
 
-  {id:"dmitro",name:"Дмитро",rarity:"secret",price:55000,png:"cards/Dmytro-secret.png",emoji:"🔮"},
-  {id:"brudin",name:"Брудин",rarity:"secret",price:95000,png:"cards/Brudin-secret.png",emoji:"💠"},
+  {id:"dmitro",name:"Дмитро",rarity:"secret",price:82500,png:"cards/Dmytro-secret.png",emoji:"🔮"},
+  {id:"brudin",name:"Брудин",rarity:"secret",price:142500,png:"cards/Brudin-secret.png",emoji:"💠"},
 
-  {id:"budko",name:"БudkО",rarity:"glitch",price:250000,png:"cards/BudkO-glitch.png",emoji:"👾"}
+  {id:"budko",name:"БudkО",rarity:"glitch",price:375000,png:"cards/BudkO-glitch.png",emoji:"👾"}
 ];
 
 const byId = id => TEACHERS.find(t=>t.id===id);
+const SELL_RATE = 0.75;
 const CHEAPEST = Math.min(...TEACHERS.map(t=>t.price));
 
 /* мутации: нельзя купить, только выбить в кейсе или получить апгрейдом */
@@ -453,18 +454,18 @@ function imgFallback(img){
 }
 
 const CASES = [
-  {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:125,
+  {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:200,
    desc:"Дёшево, и почти треть учителей в нём стоит дороже самого кейса.",
-   tier:{common:70,rare:22,epic:6,mythic:1.6,legendary:0.35,exotic:0.07,secret:0.015,glitch:0.005}},
-  {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:445,
+   tier:{common:82.83,rare:12.57,epic:3.43,mythic:0.91,legendary:0.2,exotic:0.04,secret:0.0086,glitch:0.0029}},
+  {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:750,
    desc:"Упор на редких и эпических — окупаемость держится около трети открытий.",
-   tier:{common:30,rare:34,epic:24,mythic:9,legendary:2.3,exotic:0.5,secret:0.15,glitch:0.05}},
-  {id:"director",name:"Кейс директора",emoji:"🎓",price:2450,
+   tier:{common:60,rare:19.43,epic:13.71,mythic:5.14,legendary:1.31,exotic:0.29,secret:0.086,glitch:0.029}},
+  {id:"director",name:"Кейс директора",emoji:"🎓",price:4500,
    desc:"Мифика и легендарные — основной улов, окупаемость почти у каждого третьего.",
-   tier:{common:8,rare:18,epic:28,mythic:27,legendary:13,exotic:4.5,secret:1.2,glitch:0.3}},
-  {id:"secret",name:"Секретный кейс",emoji:"🔮",price:17500,
+   tier:{common:47.42,rare:10.29,epic:16,mythic:15.43,legendary:7.43,exotic:2.57,secret:0.69,glitch:0.17}},
+  {id:"secret",name:"Секретный кейс",emoji:"🔮",price:35000,
    desc:"Топ лицея встречается чаще всего — окупаемость на том же уровне.",
-   tier:{common:1.5,rare:4,epic:10,mythic:18,legendary:27,exotic:25,secret:11,glitch:3.5}}
+   tier:{common:43.7,rare:2.29,epic:5.71,mythic:10.29,legendary:15.43,exotic:14.29,secret:6.29,glitch:2}}
 ];
 const RARITY_ORDER = ["common","rare","epic","mythic","legendary","exotic","secret","glitch"];
 CASES.forEach(c=>{
@@ -485,7 +486,7 @@ const col = r => getComputedStyle(document.documentElement).getPropertyValue('--
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 
 const S = {
-  bal: 1000, inv: [], from: null, to: null, toMut: null, tabMult: null,
+  bal: 400, inv: [], from: null, to: null, toMut: null, tabMult: null,
   spinning: false, caseSpinning: false, active: null, rot: 0, feed: [],
   freeTaken: 0,
   stats: {spent:0, casesOpened:0, bestPrice:0, bestName:""}
@@ -517,7 +518,7 @@ function localState(){
   try{ return JSON.parse(localStorage.getItem(LS_STATE)||'null'); }catch(e){ return null; }
 }
 function hasProgress(d){
-  return !!d && ((d.inv&&d.inv.length) || (d.stats&&(d.stats.spent||d.stats.casesOpened)) || (typeof d.bal==='number' && d.bal!==1000));
+  return !!d && ((d.inv&&d.inv.length) || (d.stats&&(d.stats.spent||d.stats.casesOpened)) || (typeof d.bal==='number' && d.bal!==400));
 }
 
 let pushTimer = null;
@@ -670,14 +671,14 @@ function currentStake(){
 /* доступен только если денег не хватает даже на самого дешёвого учителя
    и продавать в инвентаре уже нечего. Шанс на что-то лучше обычного — крошечный. */
 const FREE_ODDS = [
-  ["common",     92],
-  ["rare",        6],
-  ["epic",      1.5],
-  ["mythic",    0.4],
-  ["legendary",0.08],
-  ["exotic",  0.015],
-  ["secret",  0.004],
-  ["glitch",  0.001]
+  ["common",     97],
+  ["rare",      2.3],
+  ["epic",     0.55],
+  ["mythic",   0.12],
+  ["legendary",0.025],
+  ["exotic",  0.005],
+  ["secret", 0.0015],
+  ["glitch", 0.0005]
 ];
 function isBroke(){ return S.bal < CHEAPEST && S.inv.length === 0 && !S.spinning && !S.caseSpinning; }
 function rollFreeTeacher(){
@@ -692,7 +693,7 @@ function renderRescue(){
   $('rescue').classList.toggle('off', !ok);
   $('freeBtn').disabled = !ok;
   $('rescueText').innerHTML = ok
-    ? `Денег меньше <b>${fmt(CHEAPEST)} ₴</b> и продавать нечего — возьмите случайного учителя бесплатно. Почти всегда это обычный, но шанс на что-то большее есть (около <b>8%</b> на редкого и выше).`
+    ? `Денег меньше <b>${fmt(CHEAPEST)} ₴</b> и продавать нечего — возьмите случайного учителя бесплатно. Почти всегда это обычный, но шанс на что-то большее есть (около <b>3%</b> на редкого и выше).`
     : `Помощь на случай банкротства: когда останется меньше <b>${fmt(CHEAPEST)} ₴</b> и пустой инвентарь, здесь можно бесплатно получить случайного учителя. Бесплатных получено: <b>${S.freeTaken}</b>.`;
 }
 
@@ -735,7 +736,7 @@ function renderInv(){
   $('inv').innerHTML = S.inv.length
     ? S.inv.map(it=>{
         const v = variant(byId(it.id), it.mut);
-        return `<div class="card${mutClass(v)} ${S.from===it.uid?'sel':''}" style="--rc:${col(v.rarity)}" data-from="${it.uid}">${cardHTML(v,`<button class="btn sm" data-sell="${it.uid}">Продать</button>`)}</div>`;
+        return `<div class="card${mutClass(v)} ${S.from===it.uid?'sel':''}" style="--rc:${col(v.rarity)}" data-from="${it.uid}">${cardHTML(v,`<button class="btn sm" data-sell="${it.uid}">Продать ${fmt(v.price*SELL_RATE)} ₴</button>`)}</div>`;
       }).join('')
     : `<div class="empty">Инвентарь пуст.<br>Откройте кейс или купите учителя.</div>`;
 }
@@ -800,7 +801,7 @@ document.addEventListener('click', e=>{
   const sell = e.target.closest('[data-sell]');
   if(sell){
     const uid=sell.dataset.sell, it=S.inv.find(i=>i.uid===uid);
-    S.bal += variant(byId(it.id), it.mut).price;
+    S.bal += Math.round(variant(byId(it.id), it.mut).price * SELL_RATE);
     S.inv = S.inv.filter(i=>i.uid!==uid);
     if(S.from===uid){ S.from=null; $('fromCash').value=0; }
     refresh(); return;
@@ -827,7 +828,7 @@ document.addEventListener('click', e=>{
 $('q').addEventListener('input', renderShop);
 $('fromCash').addEventListener('input', refresh);
 $('reset').onclick = ()=>{ if(confirm('Сбросить прогресс?')){
-  S.bal=1000;S.inv=[];S.from=S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
+  S.bal=400;S.inv=[];S.from=S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
   S.stats={spent:0,casesOpened:0,bestPrice:0,bestName:""};
   $('fromCash').value=0; refresh(); } };
 
@@ -842,7 +843,7 @@ $('freeBtn').onclick = ()=>{
 
 $('sellAll').onclick = ()=>{
   if(!S.inv.length) return;
-  const total = S.inv.reduce((s,it)=>s+variant(byId(it.id),it.mut).price,0);
+  const total = S.inv.reduce((s,it)=>s+Math.round(variant(byId(it.id),it.mut).price * SELL_RATE),0);
   S.bal += total; S.inv = []; S.from = null; $('fromCash').value=0;
   toast('Продано всё на '+fmt(total)+' ₴');
   refresh();
