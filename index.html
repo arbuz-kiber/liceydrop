@@ -328,7 +328,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
       </div>
     </div>
     <div class="slots">
-      <div class="slot" id="slotFrom">Выберите свой предмет</div>
+      <div class="slot" id="slotFrom">Выберите своих учителей</div>
       <div class="arrow">→</div>
       <div class="slot" id="slotTo">Выберите цель</div>
     </div>
@@ -419,7 +419,7 @@ const TEACHERS = [
 ];
 
 const byId = id => TEACHERS.find(t=>t.id===id);
-const SELL_RATE = 0.75;
+const SELL_RATE = 1;
 const CHEAPEST = Math.min(...TEACHERS.map(t=>t.price));
 
 /* мутации: нельзя купить, только выбить в кейсе или получить апгрейдом */
@@ -436,8 +436,8 @@ function variant(t, mut){
 function mutClass(t){ return (t && t.mut) ? ' '+MUT[t.mut].cls : ''; }
 function rollMutation(){
   const r = Math.random();
-  if(r < 0.01) return 'rainbow';   // 1%
-  if(r < 0.09) return 'gold';      // 8%
+  if(r < 0.015) return 'rainbow';   // 1.5%
+  if(r < 0.115) return 'gold';      // 10%
   return null;
 }
 
@@ -456,16 +456,16 @@ function imgFallback(img){
 const CASES = [
   {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:200,
    desc:"Дёшево, и почти треть учителей в нём стоит дороже самого кейса.",
-   tier:{common:82.83,rare:12.57,epic:3.43,mythic:0.91,legendary:0.2,exotic:0.04,secret:0.0086,glitch:0.0029}},
+   tier:{common:76.83,rare:16.97,epic:4.63,mythic:1.23,legendary:0.27,exotic:0.054,secret:0.0116,glitch:0.0039}},
   {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:750,
    desc:"Упор на редких и эпических — окупаемость держится около трети открытий.",
-   tier:{common:60,rare:19.43,epic:13.71,mythic:5.14,legendary:1.31,exotic:0.29,secret:0.086,glitch:0.029}},
+   tier:{common:46,rare:26.23,epic:18.51,mythic:6.94,legendary:1.77,exotic:0.39,secret:0.116,glitch:0.039}},
   {id:"director",name:"Кейс директора",emoji:"🎓",price:4500,
    desc:"Мифика и легендарные — основной улов, окупаемость почти у каждого третьего.",
-   tier:{common:47.42,rare:10.29,epic:16,mythic:15.43,legendary:7.43,exotic:2.57,secret:0.69,glitch:0.17}},
+   tier:{common:29.02,rare:13.89,epic:21.6,mythic:20.83,legendary:10.03,exotic:3.47,secret:0.93,glitch:0.23}},
   {id:"secret",name:"Секретный кейс",emoji:"🔮",price:35000,
    desc:"Топ лицея встречается чаще всего — окупаемость на том же уровне.",
-   tier:{common:43.7,rare:2.29,epic:5.71,mythic:10.29,legendary:15.43,exotic:14.29,secret:6.29,glitch:2}}
+   tier:{common:26.81,rare:2.98,epic:7.42,mythic:13.38,legendary:20.06,exotic:18.58,secret:8.18,glitch:2.6}}
 ];
 const RARITY_ORDER = ["common","rare","epic","mythic","legendary","exotic","secret","glitch"];
 CASES.forEach(c=>{
@@ -486,7 +486,7 @@ const col = r => getComputedStyle(document.documentElement).getPropertyValue('--
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 
 const S = {
-  bal: 400, inv: [], from: null, to: null, toMut: null, tabMult: null,
+  bal: 400, inv: [], from: [], to: null, toMut: null, tabMult: null,
   spinning: false, caseSpinning: false, active: null, rot: 0, feed: [],
   freeTaken: 0,
   stats: {spent:0, casesOpened:0, bestPrice:0, bestName:""}
@@ -658,13 +658,23 @@ function cardHTML(t, extra=''){
   return `${avatarHTML(t,'av')}<div class="nm"><b>${t.name}</b><small>${RAR[t.rarity].l}${badge}</small></div><div class="px">${fmt(t.price)} ₴</div>${extra}`;
 }
 
+function selectedItems(){
+  return S.from.map(uid=>S.inv.find(i=>i.uid===uid)).filter(Boolean);
+}
+function stackCard(items){
+  if(!items.length) return null;
+  const vs = items.map(it=>variant(byId(it.id), it.mut));
+  if(vs.length === 1) return vs[0];
+  const price = vs.reduce((s,v)=>s+v.price,0);
+  const rarity = vs.reduce((a,v)=> RARITY_ORDER.indexOf(v.rarity) > RARITY_ORDER.indexOf(a) ? v.rarity : a, vs[0].rarity);
+  return {id:'__stack', name:`${vs.length} учителей`, rarity, price, mut:null, png:null, emoji:'📚'};
+}
 function currentStake(){
-  if(!S.from) return 0;
-  const it = S.inv.find(i=>i.uid===S.from);
-  if(!it) return 0;
-  const v = variant(byId(it.id), it.mut);
+  const items = selectedItems();
+  if(!items.length) return 0;
+  const stack = stackCard(items);
   const cash = Math.max(0, Number($('fromCash').value)||0);
-  return v.price + cash;
+  return stack.price + cash;
 }
 
 /* ---------- бесплатный учитель для банкротов ---------- */
@@ -736,7 +746,7 @@ function renderInv(){
   $('inv').innerHTML = S.inv.length
     ? S.inv.map(it=>{
         const v = variant(byId(it.id), it.mut);
-        return `<div class="card${mutClass(v)} ${S.from===it.uid?'sel':''}" style="--rc:${col(v.rarity)}" data-from="${it.uid}">${cardHTML(v,`<button class="btn sm" data-sell="${it.uid}">Продать ${fmt(v.price*SELL_RATE)} ₴</button>`)}</div>`;
+        return `<div class="card${mutClass(v)} ${S.from.includes(it.uid)?'sel':''}" style="--rc:${col(v.rarity)}" data-from="${it.uid}">${cardHTML(v,`<button class="btn sm" data-sell="${it.uid}">Продать ${fmt(v.price*SELL_RATE)} ₴</button>`)}</div>`;
       }).join('')
     : `<div class="empty">Инвентарь пуст.<br>Откройте кейс или купите учителя.</div>`;
 }
@@ -754,8 +764,7 @@ function renderStats(){
 
 const CIRC = 2*Math.PI*88;
 function chanceOf(){
-  const it = S.from ? S.inv.find(i=>i.uid===S.from) : null;
-  const fBase = it ? variant(byId(it.id), it.mut) : null;
+  const fBase = stackCard(selectedItems());
   const cash = Math.max(0, Number($('fromCash').value)||0);
   const fPrice = fBase ? fBase.price + cash : 0;
   const tBase = S.to ? variant(byId(S.to), S.toMut) : null;
@@ -771,7 +780,7 @@ function refresh(){
   $('mult').textContent = m ? 'множитель ×'+m.toFixed(2) : 'множитель ×0.00';
   $('winArc').setAttribute('stroke-dasharray', `${(CIRC*c).toFixed(2)} ${CIRC}`);
   $('slotFrom').className = 'slot'+(f?' on':''); $('slotFrom').style.setProperty('--rc', f?col(f.rarity):'#333');
-  $('slotFrom').innerHTML = f ? cardHTML(f, cash>0?`<div class="px">= ${fmt(fPrice)} ₴</div>`:'') : 'Выберите свой предмет';
+  $('slotFrom').innerHTML = f ? cardHTML(f, cash>0?`<div class="px">= ${fmt(fPrice)} ₴</div>`:'') : 'Выберите своих учителей (можно несколько)';
   $('slotTo').className = 'slot'+(t?' on':''); $('slotTo').style.setProperty('--rc', t?col(t.rarity):'#333');
   $('slotTo').innerHTML = t ? cardHTML(t) : 'Выберите цель';
   $('go').disabled = S.spinning || !(f&&t&&c>0&&fPrice>0&&t.price>fPrice);
@@ -803,11 +812,15 @@ document.addEventListener('click', e=>{
     const uid=sell.dataset.sell, it=S.inv.find(i=>i.uid===uid);
     S.bal += Math.round(variant(byId(it.id), it.mut).price * SELL_RATE);
     S.inv = S.inv.filter(i=>i.uid!==uid);
-    if(S.from===uid){ S.from=null; $('fromCash').value=0; }
+    if(S.from.includes(uid)){ S.from = S.from.filter(u=>u!==uid); $('fromCash').value=0; }
     refresh(); return;
   }
   const from = e.target.closest('[data-from]');
-  if(from){ S.from = (S.from===from.dataset.from) ? null : from.dataset.from; $('fromCash').value=0; refresh(); return; }
+  if(from){
+    const uid = from.dataset.from;
+    S.from = S.from.includes(uid) ? S.from.filter(u=>u!==uid) : [...S.from, uid];
+    refresh(); return;
+  }
   const to = e.target.closest('[data-to]');
   if(to){ S.to = to.dataset.to; S.toMut = null; refresh(); return; }
   const mutChip = e.target.closest('.mutChip');
@@ -828,7 +841,7 @@ document.addEventListener('click', e=>{
 $('q').addEventListener('input', renderShop);
 $('fromCash').addEventListener('input', refresh);
 $('reset').onclick = ()=>{ if(confirm('Сбросить прогресс?')){
-  S.bal=400;S.inv=[];S.from=S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
+  S.bal=400;S.inv=[];S.from=[];S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
   S.stats={spent:0,casesOpened:0,bestPrice:0,bestName:""};
   $('fromCash').value=0; refresh(); } };
 
@@ -844,7 +857,7 @@ $('freeBtn').onclick = ()=>{
 $('sellAll').onclick = ()=>{
   if(!S.inv.length) return;
   const total = S.inv.reduce((s,it)=>s+Math.round(variant(byId(it.id),it.mut).price * SELL_RATE),0);
-  S.bal += total; S.inv = []; S.from = null; $('fromCash').value=0;
+  S.bal += total; S.inv = []; S.from = []; $('fromCash').value=0;
   toast('Продано всё на '+fmt(total)+' ₴');
   refresh();
 };
@@ -871,9 +884,10 @@ $('go').onclick = ()=>{
   if(calc.cash > S.bal){ toast('Недостаточно средств для добавленной суммы.'); return; }
 
   S.active = calc;
-  S.inv = S.inv.filter(i=>i.uid!==S.from);
+  const usedIds = new Set(S.from);
+  S.inv = S.inv.filter(i=>!usedIds.has(i.uid));
   S.bal -= calc.cash;
-  S.from = null; S.to = null; S.toMut = null;
+  S.from = []; S.to = null; S.toMut = null;
   $('fromCash').value = 0;
   S.spinning = true; $('status').textContent=''; $('status').className='status';
   refresh();
