@@ -53,6 +53,24 @@ header{
 }
 .balance b{color:var(--gold);font-size:18px;letter-spacing:-.01em;text-transform:none}
 
+/* ---------- main nav (menu) ---------- */
+.mainNav{
+  position:sticky;top:73px;z-index:29;display:flex;gap:6px;
+  margin:0 -20px 26px;padding:10px max(20px,calc((100vw - 1320px)/2 + 20px));
+  background:rgba(8,10,15,.6);border-bottom:1px solid var(--line);backdrop-filter:blur(16px) saturate(1.2);
+  overflow-x:auto;scrollbar-width:none;
+}
+.mainNav::-webkit-scrollbar{display:none}
+.navItem{
+  flex:0 0 auto;display:flex;align-items:center;gap:8px;min-height:40px;padding:0 16px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--line);color:var(--muted);font-weight:700;font-size:13px;
+  text-decoration:none;white-space:nowrap;cursor:pointer;transition:background .15s,border-color .15s,color .15s,transform .15s;
+}
+.navItem:hover{color:var(--text);border-color:var(--line-hi);transform:translateY(-1px)}
+.navItem:active{transform:translateY(0) scale(.97)}
+.navItem .ni{font-size:16px;line-height:1}
+.navItem.active{color:#24090a;background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;box-shadow:0 10px 24px -12px rgba(255,107,33,.7)}
+
 /* ---------- buttons ---------- */
 .btn{
   --bgc:var(--panel2);
@@ -104,7 +122,7 @@ header{
 /* ---------- layout ---------- */
 .grid{display:grid;grid-template-columns:minmax(280px,1fr) minmax(400px,1.25fr) minmax(280px,1fr);gap:14px;align-items:start}
 .panel{padding:18px;border-radius:var(--r);background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow)}
-.panel.arena{position:sticky;top:92px;border-color:rgba(255,107,33,.26);background:linear-gradient(180deg,rgba(255,107,33,.07),var(--panel) 40%)}
+.panel.arena{position:sticky;top:142px;border-color:rgba(255,107,33,.26);background:linear-gradient(180deg,rgba(255,107,33,.07),var(--panel) 40%)}
 .panel h3{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-bottom:14px}
 
 /* ---------- lists / cards ---------- */
@@ -211,6 +229,9 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
 .toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));z-index:1100;transform:translateX(-50%) translateY(16px);opacity:0;transition:.22s;max-width:calc(100vw - 28px);text-align:center;padding:12px 20px;border-radius:999px;font-size:13.5px;font-weight:700;background:#161d28;border:1px solid var(--line-hi);box-shadow:var(--shadow)}
 .toast.show{opacity:1;transform:translateX(-50%)}
 
+/* ---------- section anchors (for menu navigation) ---------- */
+#casesSection,#invSection,#arenaSection,#shopSection,#boardSection{scroll-margin-top:146px}
+
 /* ---------- responsive ---------- */
 @media(max-width:1080px){
   .stats{grid-template-columns:repeat(4,1fr)}
@@ -222,25 +243,59 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   .grid>.panel:nth-child(3){grid-area:shop}
 }
 @media(max-width:700px){
-  body{font-size:14.5px}
-  .wrap{padding:0 14px 52px}
-  header{margin:0 -14px 20px;padding:11px 14px}
-  .logo{font-size:18px}.logo i{width:22px;height:22px}
-  .balance{height:40px;padding:0 13px;font-size:0;gap:0}
+  body{font-size:14.5px;padding-bottom:max(70px,calc(58px + env(safe-area-inset-bottom)))}
+  .wrap{padding:0 14px 30px}
+  header{margin:0 -14px 0;padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .logo{font-size:17px}.logo i{width:21px;height:21px}
+  .bal{gap:6px}
+  .who{display:none!important}
+  .balance{height:38px;padding:0 12px;font-size:0;gap:0}
   .balance::before{content:"₴";color:var(--gold);font-size:14px;margin-right:6px}
-  .balance b{font-size:16px}
-  .stats{grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:26px}
+  .balance b{font-size:15.5px}
+  .btn.icon,#logout{width:38px;height:38px;min-height:38px;padding:0;font-size:15px}
+  #logout{width:auto;padding:0 12px;font-size:0}
+  #logout::before{content:"⏻";font-size:15px}
+
+  /* menu becomes a fixed bottom tab bar on phones */
+  .mainNav{
+    position:fixed;top:auto;bottom:0;left:0;right:0;z-index:400;margin:0;
+    padding:6px max(8px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-right));
+    background:rgba(10,12,17,.9);border-top:1px solid var(--line-hi);border-bottom:none;
+    box-shadow:0 -14px 34px -18px rgba(0,0,0,.7);
+    overflow-x:visible;justify-content:space-between;gap:2px;
+  }
+  .navItem{flex:1 1 0;flex-direction:column;gap:2px;padding:6px 2px;border-radius:12px;background:transparent;border-color:transparent;font-size:9.5px;min-height:52px}
+  .navItem .ni{font-size:19px}
+  .navItem.active{box-shadow:none}
+  .navItem:hover{transform:none}
+
+  #casesSection,#invSection,#arenaSection,#shopSection,#boardSection{scroll-margin-top:64px}
+
+  .stats{grid-template-columns:repeat(2,1fr);gap:9px;margin:18px 0 26px}
   .stat{padding:12px 13px}.stat .v{font-size:20px}
   .shead h2{font-size:19px}.shead p{display:none}
   .cases{gap:10px;margin-right:-14px}
   .case{flex-basis:240px;padding:15px}
-  .grid{display:flex;flex-direction:column}
+  .grid{display:flex;flex-direction:column;gap:16px}
   .panel{padding:15px}
   .panel.arena{order:-1}
   .ring{width:min(320px,84vw)}.center{inset:42px}.chance{font-size:40px}
   .list,.inv{max-height:370px}
   .slot{min-height:70px}.slot .av{display:none}
   .reelItem{width:100px;flex-basis:100px}.reelBox{height:152px}
+
+  /* bigger, easier tap targets */
+  .tab{min-height:42px;font-size:13px}
+  .mutChip{min-height:44px;font-size:12.5px}
+  .btn{min-height:46px}
+  .lbTab{padding:10px 13px;font-size:12.5px}
+  .card{padding:11px}
+  .oddsBox summary{padding:10px}
+
+  /* stop iOS auto-zoom on focus */
+  .search,.cashRow input,.authCard input{font-size:16px}
+
+  .toast{bottom:max(78px,calc(66px + env(safe-area-inset-bottom)))}
 }
 @media(max-width:380px){.ring{width:280px}.center{inset:38px}.slot .px{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
@@ -291,6 +346,60 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
 .profGrid .l{font-size:10.5px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase}
 .profGrid .v{font-size:15px;font-weight:700;margin-top:4px;word-break:break-word}
 
+/* ---------- price on reel + drop actions + separate views ---------- */
+.reelItem .rp{font-style:normal;font-weight:700;font-size:10.5px;color:var(--gold)}
+.dropActions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+.view{display:none}
+.view.active{display:block}
+.panel.arena.view.active{display:flex}
+.grid{display:block!important}
+.panel.arena{position:static!important}
+
+/* ===== v19: арена = инвентарь + апгрейд + магазин вместе ===== */
+.grid.trio{display:grid!important;grid-template-columns:minmax(260px,1fr) minmax(380px,1.3fr) minmax(260px,1fr);gap:14px;align-items:start}
+.grid.trio .inv,.grid.trio .list{max-height:520px}
+@media(max-width:1080px){
+  .grid.trio{grid-template-columns:1fr 1fr;grid-template-areas:"arena arena" "inv shop"}
+  .grid.trio #arenaSection{grid-area:arena}
+  .grid.trio #invSection{grid-area:inv}
+  .grid.trio #shopSection{grid-area:shop}
+}
+@media(max-width:820px){
+  .grid.trio{display:flex!important;flex-direction:column}
+  .grid.trio #arenaSection{order:-1}
+  .grid.trio .inv,.grid.trio .list{max-height:330px}
+}
+
+/* ===== v19: меню ===== */
+.mainNav{gap:8px;padding-top:12px;padding-bottom:12px}
+.navItem{position:relative;overflow:hidden}
+.navItem::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(120deg,transparent,rgba(255,255,255,.14),transparent);transform:translateX(-130%);transition:transform .55s}
+.navItem:hover::after{transform:translateX(130%)}
+@media(min-width:701px){
+  .navItem{min-height:44px;font-size:13.5px;letter-spacing:-.01em}
+  .navItem.active{transform:translateY(-1px) scale(1.02)}
+}
+@media(max-width:700px){
+  .mainNav{padding-top:8px;border-radius:20px 20px 0 0;background:rgba(10,12,17,.95)}
+  .navItem{font-size:10px;font-weight:800;color:var(--dim);transition:color .18s}
+  .navItem .ni{transition:transform .22s}
+  .navItem.active{background:transparent;color:var(--accent);box-shadow:none}
+  .navItem.active .ni{transform:translateY(-2px) scale(1.16)}
+  .navItem.active::before{content:"";position:absolute;top:2px;left:50%;transform:translateX(-50%);width:26px;height:3px;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--gold))}
+  .navItem::after{display:none}
+  .panel{border-radius:18px}
+  .stat{border-radius:14px}
+  .case{flex-basis:250px}
+  .overlay{padding:16px;gap:14px}
+  .reveal .rn{font-size:19px}
+  .slots{gap:6px}
+  .status{font-size:13.5px}
+  .dropActions{width:100%;gap:8px}
+  .dropActions .btn{flex:1 1 46%;min-height:52px;font-size:13.5px}
+}
+#sellDrop{flex-direction:column;gap:2px;line-height:1.15}
+.sellPct{display:block;font-size:10.5px;font-weight:800;letter-spacing:.03em;opacity:.85}
+#sellDrop.bad{background:linear-gradient(135deg,#ff5f6d,#ff8a72);color:#2b0405;box-shadow:0 12px 30px -14px rgba(255,95,109,.7)}
 </style>
 </head>
 <body>
@@ -305,6 +414,14 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </div>
 </header>
 
+<nav class="mainNav" id="mainNav">
+  <button type="button" class="navItem" data-nav="cases"><span class="ni">🎁</span><span class="nt">Кейсы</span></button>
+  <button type="button" class="navItem" data-nav="inv"><span class="ni">🎒</span><span class="nt">Инвентарь</span></button>
+  <button type="button" class="navItem" data-nav="arena"><span class="ni">⚡</span><span class="nt">Апгрейд</span></button>
+  <button type="button" class="navItem" data-nav="shop"><span class="ni">🛒</span><span class="nt">Магазин</span></button>
+  <button type="button" class="navItem" data-nav="board"><span class="ni">🏆</span><span class="nt">Топ</span></button>
+</nav>
+
 <div class="stats">
   <div class="stat"><div class="l">Учителей собрано</div><div class="v" id="stCount">0</div></div>
   <div class="stat"><div class="l">Потрачено</div><div class="v" id="stSpent">0 ₴</div></div>
@@ -312,13 +429,15 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   <div class="stat"><div class="l">Кейсов открыто</div><div class="v" id="stCases">0</div></div>
 </div>
 
-<div class="shead"><h2>Кейсы лицея</h2><p>Шансы честные и показаны заранее</p></div>
+<div class="view" id="viewCases">
+<div class="shead" id="casesSection"><h2>Кейсы лицея</h2><p>Шансы честные и показаны заранее</p></div>
 <p class="note">Изредка учитель выпадает в мутации: <b style="color:#ffcb52">Gold ×3</b> к цене или <b style="color:#ff8fe0">Rainbow ×10</b>. Мутации нельзя купить — только выбить в кейсе или заапгрейдить.</p>
 <div class="cases" id="cases"></div>
+</div>
 
 <div class="grid">
   <!-- inventory -->
-  <section class="panel">
+  <section class="panel view" id="invSection">
     <h3>Ваш инвентарь</h3>
     <div class="inv" id="inv"></div>
     <div style="margin-top:12px"><button class="btn" id="sellAll" style="width:100%">Продать всё</button></div>
@@ -335,7 +454,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </section>
 
   <!-- upgrader -->
-  <section class="panel arena up">
+  <section class="panel arena up view" id="arenaSection">
     <div class="ring">
       <svg viewBox="0 0 200 200">
         <circle class="trackC" cx="100" cy="100" r="88"></circle>
@@ -365,7 +484,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </section>
 
   <!-- shop -->
-  <section class="panel">
+  <section class="panel view" id="shopSection">
     <h3>Учителя лицея — цель апгрейда</h3>
     <div class="tabs" id="tabs">
       <div class="tab" data-tab="2">×2</div>
@@ -378,7 +497,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </section>
 </div>
 
-<section class="panel" style="margin-top:18px">
+<section class="panel view" style="margin-top:18px" id="boardSection">
   <h3>🏆 Таблица лидеров</h3>
   <div class="lbTabs" id="lbTabs">
     <div class="lbTab active" data-lb="upgrade">Лучший апгрейд</div>
@@ -498,17 +617,17 @@ function imgFallback(img){
 
 const CASES = [
   {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:200,
-   desc:"Дёшево, и почти треть учителей в нём стоит дороже самого кейса.",
-   tier:{common:71.5,rare:19.8,epic:6.2,mythic:1.85,legendary:0.5,exotic:0.1,secret:0.035,glitch:0.015}},
+   desc:"Самый дешёвый вход. Отличный способ начать коллекцию.",
+   tier:{common:60,rare:20,epic:10,mythic:5,legendary:3,exotic:1,secret:0.6,glitch:0.4}},
   {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:750,
-   desc:"Упор на редких и эпических — окупаемость держится около трети открытий.",
-   tier:{common:40.5,rare:27.5,epic:21,mythic:8.3,legendary:2.2,exotic:0.5,secret:0.15,glitch:0.05}},
+   desc:"Упор на редких и эпических учителей.",
+   tier:{common:35,rare:31.5,epic:14,mythic:9.5,legendary:6,exotic:2,secret:0.9,glitch:0.7}},
   {id:"director",name:"Кейс директора",emoji:"🎓",price:4500,
-   desc:"Мифика и легендарные — основной улов, окупаемость почти у каждого третьего.",
-   tier:{common:23.5,rare:13,epic:22.5,mythic:23,legendary:12,exotic:4.4,secret:1.25,glitch:0.35}},
+   desc:"Обычных почти нет: мифики и легендарные — основной улов.",
+   tier:{common:10,rare:16.5,epic:29,mythic:21.5,legendary:14,exotic:6,secret:2.4,glitch:1.6}},
   {id:"secret",name:"Секретный кейс",emoji:"🔮",price:35000,
-   desc:"Топ лицея встречается чаще всего — окупаемость на том же уровне.",
-   tier:{common:21.5,rare:2.5,epic:6.5,mythic:13,legendary:21.5,exotic:21,secret:10,glitch:3.5}}
+   desc:"Топ лицея и минимум обычных.",
+   tier:{common:5,rare:8,epic:10,mythic:18,legendary:26,exotic:16,secret:12,glitch:5}}
 ];
 const RARITY_ORDER = ["common","rare","epic","mythic","legendary","exotic","secret","glitch"];
 CASES.forEach(c=>{
@@ -1006,7 +1125,7 @@ function openCase(caseId){
     <div class="reelBox">
       <div class="pointer"></div>
       <div class="reelTrack" id="reelTrack">
-        ${strip.map(s=>{ const v=variant(byId(s.id),s.mut); return `<div class="reelItem${mutClass(v)}" style="--rc:${col(v.rarity)}">${avatarHTML(v,'e')}<b>${v.name}</b><small>${RAR[v.rarity].l}${v.mut?' · '+MUT[v.mut].label:''}</small></div>`; }).join('')}
+        ${strip.map(s=>{ const v=variant(byId(s.id),s.mut); return `<div class="reelItem${mutClass(v)}" style="--rc:${col(v.rarity)}">${avatarHTML(v,'e')}<b>${v.name}</b><small>${RAR[v.rarity].l}${v.mut?' · '+MUT[v.mut].label:''}</small><i class="rp">${fmt(v.price)} ₴</i></div>`; }).join('')}
       </div>
     </div>
     <div class="reveal" id="reveal"></div>
@@ -1024,7 +1143,6 @@ function openCase(caseId){
   setTimeout(()=>{
     track.querySelectorAll('.reelItem')[winIndex].classList.add('landed');
     const v = variant(byId(winnerId), winnerMut);
-    addToInv(winnerId, winnerMut);
     if(v.price > (S.stats.bestDropPrice||0)){
       const totalW = cs.pool.reduce((a,b)=>a+b.w,0);
       const dropW = cs.pool.filter(x=>x.id===winnerId).reduce((a,b)=>a+b.w,0);
@@ -1037,9 +1155,24 @@ function openCase(caseId){
       ${avatarHTML(v,'e')}
       <div class="rn">${v.name}${v.mut?` <span class="mutTag ${v.mut}">${MUT[v.mut].label}</span>`:''}</div>
       <div class="rr" style="color:${col(v.rarity)}">${RAR[v.rarity].l} · ${fmt(v.price)} ₴</div>
-      <button class="btn primary" id="closeReel" style="margin-top:8px">Забрать в инвентарь</button>
+      <div class="dropActions">
+        <button class="btn primary" id="keepDrop">Оставить учителя</button>
+        ${(()=>{
+          const money = Math.round(v.price*SELL_RATE);
+          const diff = Math.round((money - cs.price)/cs.price*100);
+          const ok = diff >= 0;
+          return `<button class="btn ${ok?'gold':'bad'}" id="sellDrop">Продать за ${fmt(money)} ₴<span class="sellPct">${ok?'в окупе +':'не в окупе −'}${Math.abs(diff)}% к цене кейса</span></button>`;
+        })()}
+      </div>
     `;
-    $('closeReel').onclick = ()=>{ overlay.remove(); S.caseSpinning=false; refresh(); };
+    const finish = ()=>{ overlay.remove(); S.caseSpinning=false; refresh(); };
+    $('keepDrop').onclick = ()=>{ addToInv(winnerId, winnerMut); toast('Оставлен: '+v.name); finish(); };
+    $('sellDrop').onclick = ()=>{
+      const money = Math.round(v.price*SELL_RATE);
+      S.bal += money;
+      toast('Продан: '+v.name+' за '+fmt(money)+' ₴');
+      finish();
+    };
     refresh();
   }, 6300);
 }
@@ -1122,6 +1255,24 @@ $('profClose').onclick = ()=>$('profOverlay').classList.remove('show');
 $('profOverlay').onclick = e=>{ if(e.target===$('profOverlay')) $('profOverlay').classList.remove('show'); };
 $('lbRefresh').onclick = ()=>{ $('lbList').innerHTML = '<div class="empty">Загрузка…</div>'; loadLeaderboard(); };
 setInterval(()=>loadLeaderboard(), 60000);
+
+/* ---------- главное меню: отдельные вкладки ---------- */
+const VIEWS = {cases:'viewCases', inv:'invSection', arena:'arenaSection', shop:'shopSection', board:'boardSection'};
+/* на вкладке «Апгрейд» показываем сразу инвентарь + апгрейдер + магазин */
+const VIEW_GROUPS = {arena:['arena','inv','shop']};
+function showView(name){
+  const shown = VIEW_GROUPS[name] || [name];
+  Object.entries(VIEWS).forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.classList.toggle('active', shown.includes(k)); });
+  document.querySelectorAll('.navItem').forEach(el=>el.classList.toggle('active', el.dataset.nav===name));
+  const grid = document.querySelector('.grid');
+  if(grid) grid.classList.toggle('trio', name==='arena');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.addEventListener('click', e=>{
+  const n = e.target.closest('.navItem');
+  if(n){ e.preventDefault(); showView(n.dataset.nav); }
+});
+showView('cases');
 
 boot();
 loadLeaderboard();
