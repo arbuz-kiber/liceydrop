@@ -527,12 +527,13 @@ const caseById = id => CASES.find(c=>c.id===id);
 
 const col = r => getComputedStyle(document.documentElement).getPropertyValue('--c-'+r).trim();
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
+const pct = c => (c*100 < 0.01 ? (c*100).toFixed(4) : (c*100).toFixed(2)).replace(/\.?0+$/,'') + '%';
 
 const defStats = () => ({
   spent:0, casesOpened:0, bestPrice:0, bestName:"",
   upgrades:0, upgradesWon:0,
   bestUpgradePrice:0, bestUpgradeName:"", bestUpgradeFrom:"", bestUpgradeChance:0,
-  bestDropPrice:0, bestDropName:""
+  bestDropPrice:0, bestDropName:"", bestDropCase:"", bestDropChance:0
 });
 const S = {
   bal: 400, inv: [], from: [], to: null, toMut: null, tabMult: null,
@@ -649,15 +650,15 @@ async function handleAuth(){
       await enterGame(user);
       toast('С возвращением, '+user.name+'!');
     }else{
-      // регистрация: переносим прогресс из этого браузера, если он был
-      const guest = localState();
-      const startState = hasProgress(guest) ? {bal:guest.bal, inv:guest.inv||[], feed:guest.feed||[], freeTaken:guest.freeTaken||0, stats:Object.assign(defStats(), guest.stats||{})} : snapshot();
+      // регистрация: новый аккаунт всегда начинает с нуля, гостевой прогресс не переносится
+      const startState = {bal:400, inv:[], feed:[], freeTaken:0, stats:defStats()};
+      try{ localStorage.removeItem(LS_STATE); }catch(e){}
       const { data: created, error: insErr } = await sbc.from(TABLE)
         .insert([{ name, password: pass, state: startState, balance: startState.bal }])
         .select().single();
       if(insErr) throw insErr;
       await enterGame(created);
-      toast(hasProgress(guest) ? 'Аккаунт создан — прогресс перенесён' : 'Аккаунт создан');
+      toast('Аккаунт создан — прогресс начинается с нуля');
     }
   }catch(e){
     authErr('Ошибка соединения. Попробуйте ещё раз.');
@@ -692,7 +693,7 @@ async function boot(){
   const ok = await checkAutoLogin();
   if(!ok){
     $('authOverlay').classList.add('show');
-    if(hasProgress(localState())) $('authNote').textContent = 'У вас есть прогресс в этом браузере — он автоматически перенесётся в новый аккаунт при регистрации.';
+    if(hasProgress(localState())) $('authNote').textContent = 'Прогресс без аккаунта не сохраняется: новый аккаунт всегда начинается с нуля.';
   }
 }
 
@@ -954,7 +955,7 @@ $('go').onclick = ()=>{
     if(win){
       addToInv(calc.t.id, calc.t.mut);
       S.stats.upgradesWon = (S.stats.upgradesWon||0) + 1;
-      if(calc.t.price > (S.stats.bestUpgradePrice||0)){
+      if(!S.stats.bestUpgradeChance || calc.c < S.stats.bestUpgradeChance){
         S.stats.bestUpgradePrice = calc.t.price;
         S.stats.bestUpgradeName = calc.t.name + (calc.t.mut?` (${MUT[calc.t.mut].label})`:'');
         S.stats.bestUpgradeFrom = calc.f ? calc.f.name : '';
@@ -1025,8 +1026,12 @@ function openCase(caseId){
     const v = variant(byId(winnerId), winnerMut);
     addToInv(winnerId, winnerMut);
     if(v.price > (S.stats.bestDropPrice||0)){
+      const totalW = cs.pool.reduce((a,b)=>a+b.w,0);
+      const dropW = cs.pool.filter(x=>x.id===winnerId).reduce((a,b)=>a+b.w,0);
       S.stats.bestDropPrice = v.price;
       S.stats.bestDropName = v.name + (v.mut?` (${MUT[v.mut].label})`:'');
+      S.stats.bestDropCase = cs.name;
+      S.stats.bestDropChance = totalW ? dropW/totalW : 0;
     }
     $('reveal').innerHTML = `
       ${avatarHTML(v,'e')}
@@ -1041,10 +1046,14 @@ function openCase(caseId){
 
 /* ---------- таблица лидеров ---------- */
 const LB_MODES = {
-  upgrade:{title:'Лучший апгрейд', val:p=>p.st.bestUpgradePrice||0, sub:p=>p.st.bestUpgradeName
-    ? (p.st.bestUpgradeFrom? p.st.bestUpgradeFrom+' → ':'')+p.st.bestUpgradeName+(p.st.bestUpgradeChance? ' ('+(p.st.bestUpgradeChance*100).toFixed(1).replace(/\.?0+$/,'')+'% шанс)':'')
-    : '—', fmtV:v=>fmt(v)+' ₴'},
-  drop:{title:'Лучший дроп с кейса', val:p=>p.st.bestDropPrice||0, sub:p=>p.st.bestDropName||'—', fmtV:v=>fmt(v)+' ₴'},
+  upgrade:{title:'Лучший апгрейд (по шансу)', val:p=>p.st.bestUpgradeChance? 1/p.st.bestUpgradeChance : 0,
+    sub:p=>p.st.bestUpgradeName
+      ? (p.st.bestUpgradeFrom? p.st.bestUpgradeFrom+' → ':'')+p.st.bestUpgradeName+' — '+fmt(p.st.bestUpgradePrice||0)+' ₴'
+      : '—', fmtV:v=>v? pct(1/v) : '—'},
+  drop:{title:'Лучший дроп с кейса', val:p=>p.st.bestDropPrice||0,
+    sub:p=>p.st.bestDropName
+      ? `${p.st.bestDropCase? p.st.bestDropCase+' → ':''}${p.st.bestDropName}${p.st.bestDropChance? ' · шанс '+pct(p.st.bestDropChance):''}`
+      : '—', fmtV:v=>fmt(v)+' ₴'},
   money:{title:'Больше всего денег', val:p=>p.bal||0, sub:p=>'учителей в инвентаре: '+(p.invCount||0), fmtV:v=>fmt(v)+' ₴'},
   cases:{title:'Больше всего кейсов', val:p=>p.st.casesOpened||0, sub:p=>'потрачено '+fmt(p.st.spent||0)+' ₴', fmtV:v=>fmt(v)},
   upgrades:{title:'Больше всего апгрейдов', val:p=>p.st.upgrades||0, sub:p=>'удачных: '+fmt(p.st.upgradesWon||0), fmtV:v=>fmt(v)}
@@ -1089,10 +1098,12 @@ function showProfile(id){
   $('profGrid').innerHTML = [
     ['Баланс', fmt(p.bal)+' ₴'],
     ['Учителей в инвентаре', fmt(p.invCount)],
-    ['Лучший апгрейд', s.bestUpgradeName
-      ? `${s.bestUpgradeFrom? s.bestUpgradeFrom+' → ':''}${s.bestUpgradeName} — ${fmt(s.bestUpgradePrice)} ₴${s.bestUpgradeChance? ` (шанс ${(s.bestUpgradeChance*100).toFixed(1).replace(/\.?0+$/,'')}%)`:''}`
+    ['Лучший апгрейд (по шансу)', s.bestUpgradeName
+      ? `${s.bestUpgradeFrom? s.bestUpgradeFrom+' → ':''}${s.bestUpgradeName} — шанс ${s.bestUpgradeChance? pct(s.bestUpgradeChance):'—'} (${fmt(s.bestUpgradePrice)} ₴)`
       : '—'],
-    ['Лучший дроп с кейса', s.bestDropName ? `${s.bestDropName} — ${fmt(s.bestDropPrice)} ₴` : '—'],
+    ['Лучший дроп с кейса', s.bestDropName
+      ? `${s.bestDropCase? s.bestDropCase+' → ':''}${s.bestDropName} — ${fmt(s.bestDropPrice)} ₴${s.bestDropChance? ` (шанс ${pct(s.bestDropChance)})`:''}`
+      : '—'],
     ['Лучшая карточка', s.bestName ? `${s.bestName} — ${fmt(s.bestPrice)} ₴` : '—'],
     ['Кейсов открыто', fmt(s.casesOpened||0)],
     ['Апгрейдов сделано', fmt(s.upgrades||0)],
