@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Licey Drop — кейсы и апгрейд учителей</title>
+<title>🎃 Licey Drop — Хеллоуин</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=Creepster&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#080a0f; --bg2:#0d1117;
@@ -400,27 +400,187 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
 #sellDrop{flex-direction:column;gap:2px;line-height:1.15}
 .sellPct{display:block;font-size:10.5px;font-weight:800;letter-spacing:.03em;opacity:.85}
 #sellDrop.bad{background:linear-gradient(135deg,#ff5f6d,#ff8a72);color:#2b0405;box-shadow:0 12px 30px -14px rgba(255,95,109,.7)}
+
+/* ================= 🎃 HALLOWEEN THEME ================= */
+:root{
+  --bg:#09060f; --bg2:#100a1a;
+  --accent:#ff7a1a; --accent2:#ffb25e; --purple:#9d4dff;
+  --line:rgba(190,140,255,.12); --line-hi:rgba(210,170,255,.22);
+}
+body{
+  background:
+    radial-gradient(900px 520px at 10% -8%, rgba(255,122,26,.20), transparent 65%),
+    radial-gradient(800px 520px at 94% 2%, rgba(157,77,255,.22), transparent 62%),
+    radial-gradient(700px 400px at 50% 110%, rgba(157,77,255,.12), transparent 70%),
+    linear-gradient(180deg,#130b1f 0, var(--bg) 640px);
+}
+header,.mainNav{background:rgba(12,7,20,.78)}
+.logo{font-family:'Creepster','Space Grotesk',cursive;font-weight:400;letter-spacing:.05em;font-size:26px}
+.logo i{background:none;box-shadow:none;width:auto;height:auto;border-radius:0;font-style:normal;font-size:28px;line-height:1;
+  filter:drop-shadow(0 0 10px rgba(255,122,26,.85));animation:hwFlicker 3.2s infinite}
+.logo i::before{content:"🎃"}
+.logo span{color:var(--accent);text-shadow:0 0 14px rgba(255,122,26,.6)}
+.shead h2,.authCard h2{font-family:'Creepster','Space Grotesk',cursive;font-weight:400;letter-spacing:.05em;font-size:28px;color:var(--accent2);text-shadow:0 0 18px rgba(255,122,26,.35)}
+.case:hover,.panel{box-shadow:0 24px 60px -24px rgba(60,0,110,.6)}
+.case .ico{filter:drop-shadow(0 0 12px rgba(255,122,26,.45))}
+.btn.primary{box-shadow:0 12px 30px -12px rgba(255,122,26,.8)}
+.navItem.active{box-shadow:0 10px 24px -12px rgba(255,122,26,.85)}
+footer{color:var(--dim)}
+footer::after{content:"🎃 Happy Halloween 🦇 👻 🕸️";display:block;margin-top:10px;font-size:15px;letter-spacing:.08em}
+
+.hwBanner{display:flex;align-items:center;justify-content:center;gap:10px;margin:-8px 0 22px;padding:10px 16px;border-radius:14px;
+  background:linear-gradient(90deg,rgba(255,122,26,.16),rgba(157,77,255,.18));border:1px solid rgba(255,122,26,.28);
+  font-weight:700;font-size:14px;text-align:center}
+.hwBanner b{color:var(--accent2);font-family:'Space Grotesk',sans-serif}
+.hwBanner[hidden]{display:none}
+
+#hwLayer{position:fixed;inset:0;pointer-events:none;z-index:4;overflow:hidden}
+#hwLayer .fl{position:absolute;top:-60px;opacity:.5;will-change:transform;filter:drop-shadow(0 0 8px rgba(157,77,255,.5))}
+@keyframes hwFall{0%{transform:translate3d(0,-10vh,0) rotate(0deg)}100%{transform:translate3d(var(--dx,40px),112vh,0) rotate(var(--rot,360deg))}}
+@keyframes hwSway{0%,100%{margin-left:0}50%{margin-left:36px}}
+@keyframes hwFlicker{0%,100%{opacity:1}42%{opacity:1}44%{opacity:.7}46%{opacity:1}78%{opacity:.85}80%{opacity:1}}
+.hwFog{position:fixed;left:0;right:0;bottom:0;height:160px;pointer-events:none;z-index:3;
+  background:linear-gradient(0deg,rgba(157,77,255,.16),transparent);}
+.hwWeb{position:fixed;top:0;width:150px;height:150px;pointer-events:none;z-index:31;opacity:.35}
+.hwWeb.l{left:0}.hwWeb.r{right:0;transform:scaleX(-1)}
+@media (max-width:700px){.hwWeb{width:90px;height:90px}.logo{font-size:22px}}
+@media (prefers-reduced-motion:reduce){#hwLayer .fl,.logo i{animation:none!important}}
+
+/* ================= 👻 EVENT ================= */
+.balance.candyBal{padding:0 14px}.balance.candyBal b{color:#ff9bf0}
+.navItem.hot{border-color:rgba(255,122,26,.5);animation:hotPulse 2s infinite}
+@keyframes hotPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,122,26,.0)}50%{box-shadow:0 0 14px 0 rgba(255,122,26,.45)}}
+.candyHint{font-size:12px;color:#ff9bf0;margin:-4px 0 10px;font-weight:700}
+.candyPop{position:fixed;left:50%;top:92px;z-index:2000;transform:translateX(-50%);padding:9px 18px;border-radius:999px;font-weight:800;font-size:17px;
+  background:linear-gradient(135deg,#8a2cff,#ff7a1a);color:#fff;box-shadow:0 10px 30px -8px rgba(157,77,255,.8);animation:candyUp 1.8s ease-out forwards;pointer-events:none}
+@keyframes candyUp{0%{opacity:0;transform:translate(-50%,10px) scale(.8)}15%{opacity:1;transform:translate(-50%,0) scale(1.08)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-26px)}}
+
+.nightBar{margin:-8px 0 22px;padding:10px 16px;border-radius:14px;text-align:center;font-weight:700;font-size:13.5px;
+  background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted)}
+.nightBar b{color:var(--text)}
+.nightBar.on{color:#e9dcff;border-color:rgba(157,77,255,.55);background:linear-gradient(90deg,rgba(60,20,120,.55),rgba(157,77,255,.2));animation:nightGlow 3s ease-in-out infinite}
+@keyframes nightGlow{0%,100%{box-shadow:0 0 0 rgba(157,77,255,0)}50%{box-shadow:0 0 22px rgba(157,77,255,.4)}}
+body.night{background:
+  radial-gradient(900px 520px at 10% -8%, rgba(255,122,26,.14), transparent 65%),
+  radial-gradient(800px 520px at 94% 2%, rgba(157,77,255,.32), transparent 62%),
+  radial-gradient(700px 400px at 50% 110%, rgba(157,77,255,.2), transparent 70%),
+  linear-gradient(180deg,#0f0820 0, #06030c 640px)}
+
+.boss{margin-bottom:14px;border-color:rgba(157,77,255,.4);background:linear-gradient(160deg,rgba(157,77,255,.14),var(--panel) 55%)}
+.bossBox{display:flex;gap:20px;align-items:center}
+.bossAv{width:170px;height:170px;flex:0 0 170px;border-radius:22px;object-fit:cover;display:grid;place-items:center;font-size:90px;
+  background:rgba(157,77,255,.12);border:1px solid rgba(157,77,255,.4);
+  filter:saturate(.6) hue-rotate(250deg) drop-shadow(0 0 22px rgba(157,77,255,.8));opacity:.92;animation:bossFloat 3.4s ease-in-out infinite}
+.boss.dead .bossAv{filter:grayscale(1);opacity:.45;animation:none}
+@keyframes bossFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.bossInfo{flex:1;min-width:0}
+.bossName{font-family:'Creepster','Space Grotesk',cursive;font-size:34px;letter-spacing:.05em;color:var(--accent2);text-shadow:0 0 18px rgba(255,122,26,.4);line-height:1.1}
+.bossPhase{font-size:13px;color:var(--muted);margin:4px 0 12px;font-weight:700}
+.hpBar{position:relative;height:30px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;border:1px solid var(--line-hi)}
+.hpBar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#7b2cff,#ff7a1a);transition:width .6s}
+.hpBar span{position:relative;z-index:1;display:block;text-align:center;line-height:28px;font-weight:800;font-size:13px;text-shadow:0 1px 4px rgba(0,0,0,.7)}
+.bossMeta{font-size:12.5px;color:var(--muted);margin:10px 0;line-height:1.6}
+.bossMeta b{color:var(--text)}
+.bossReward{font-size:13px;padding:12px;border-radius:12px;border:1px dashed rgba(255,203,82,.4);background:rgba(255,203,82,.06);line-height:1.55}
+.bossReward .btn{width:100%;margin-top:10px}
+.evGrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.evStats{font-size:12.5px;color:var(--muted);margin-bottom:12px;line-height:1.7}
+.evStats b{color:var(--text)}
+.shopItem{display:flex;align-items:center;gap:12px;padding:10px 12px;margin-bottom:8px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}
+.shopItem .si{font-size:26px;width:34px;text-align:center}
+.shopItem .tx{flex:1;min-width:0}.shopItem .tx b{display:block;font-size:13.5px}.shopItem .tx small{font-size:11.5px;color:var(--dim)}
+.evTab{padding:8px 12px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--muted);font-size:12px;cursor:pointer}
+.evTab.active{border-color:var(--accent);color:var(--text)}
+.topPrizes{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.6}
+@media (max-width:900px){.evGrid{grid-template-columns:1fr}}
+@media (max-width:700px){.bossBox{flex-direction:column;text-align:center}.bossAv{width:140px;height:140px;flex-basis:140px}.bossName{font-size:28px}}
+
+/* ================= 🎁 ЕЖЕДНЕВНЫЕ НАГРАДЫ + 🧪 ЗЕЛЬЯ ================= */
+.btn.icon{position:relative}
+.btn.icon.ready{border-color:rgba(255,122,26,.65);animation:hotPulse 2s infinite}
+.btn.icon.ready::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 0 2px #0d1117}
+#dailyOverlay{position:fixed;inset:0;z-index:215;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(6,8,12,.9);backdrop-filter:blur(8px)}
+#dailyOverlay.show{display:flex}
+.dailyCard{width:min(760px,100%);max-height:calc(100vh - 28px);overflow:auto;background:linear-gradient(180deg,#171d29,#0f131b);border:1px solid var(--line-hi);border-radius:var(--r);padding:22px;box-shadow:var(--shadow)}
+.dailyCard h3{font-size:22px;letter-spacing:-.02em;margin-bottom:4px}
+.dailySub{color:var(--muted);font-size:13px;line-height:1.55;margin-bottom:16px}
+.dailySub b{color:var(--text)}
+.dailyGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:16px}
+.dc{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 4px 9px;border-radius:var(--r-sm);border:1px solid var(--line);background:var(--surface);text-align:center;min-width:0}
+.dc .dn{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:800}
+.dc .di{font-size:26px;line-height:1.1}
+.dc .dt{font-size:10.5px;color:var(--muted);line-height:1.3;font-weight:700}
+.dc.big{border-color:rgba(255,203,82,.45);background:linear-gradient(160deg,rgba(255,203,82,.13),var(--surface))}
+.dc.now{border-color:var(--accent);background:linear-gradient(160deg,rgba(255,107,33,.2),var(--surface));animation:dcPulse 1.8s ease-in-out infinite}
+.dc.now .dn{color:var(--accent2)}
+.dc.done{opacity:.5}
+.dc.done::after{content:"✓";position:absolute;top:3px;right:6px;color:var(--green);font-weight:800;font-size:14px}
+@keyframes dcPulse{0%,100%{box-shadow:0 0 0 1px var(--accent),0 0 6px rgba(255,107,33,.2)}50%{box-shadow:0 0 0 1px var(--accent),0 0 22px rgba(255,107,33,.6)}}
+.dailyBtns{display:flex;gap:10px}.dailyBtns .btn{flex:1}
+@media(max-width:560px){.dailyGrid{grid-template-columns:repeat(4,1fr)}.dc .di{font-size:22px}.dc .dt{font-size:10px}.dailyCard{padding:16px}}
+.potBar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:-8px 0 22px}
+.potBar:empty{display:none}
+.potChip{padding:8px 14px;border-radius:999px;font-weight:700;font-size:13px;border:1px solid var(--line-hi);background:var(--panel2)}
+.potChip b{font-family:'Space Grotesk',sans-serif}
+.potChip.luck{border-color:rgba(62,224,143,.5);color:#c4ffe0;background:rgba(62,224,143,.1)}
+.potChip.coin{border-color:rgba(255,203,82,.5);color:#ffe6a3;background:rgba(255,203,82,.1)}
+
+/* ================= 📜 ЧТО НОВОГО ================= */
+#updOverlay{position:fixed;inset:0;z-index:216;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(6,8,12,.92);backdrop-filter:blur(8px)}
+#updOverlay.show{display:flex}
+.updCard{width:min(640px,100%);max-height:calc(100vh - 28px);display:flex;flex-direction:column;background:linear-gradient(180deg,#1b1530,#0f131b);border:1px solid rgba(157,77,255,.45);border-radius:var(--r);box-shadow:var(--shadow),0 0 40px -10px rgba(157,77,255,.5)}
+.updHead{padding:20px 22px 12px}
+.updHead h3{font-size:22px;letter-spacing:-.02em}
+.updHead p{color:var(--muted);font-size:13px;margin-top:4px}
+.updBody{padding:0 22px 8px;overflow:auto;flex:1}
+.updSec{padding:12px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface)}
+.updSec h4{font-size:15px;margin-bottom:6px}
+.updSec ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.updSec li{font-size:13px;color:var(--muted);line-height:1.5;padding-left:14px;position:relative}
+.updSec li::before{content:"•";position:absolute;left:2px;color:var(--accent2)}
+.updSec li b{color:var(--text)}
+.updTeach{display:flex;justify-content:space-between;gap:8px}
+.updFoot{padding:12px 22px 20px}
+.updFoot .btn{width:100%;min-height:48px;font-size:15px}
 </style>
 </head>
 <body>
+<div id="hwLayer" aria-hidden="true"></div>
+<div class="hwFog" aria-hidden="true"></div>
+<svg class="hwWeb l" viewBox="0 0 150 150" fill="none" stroke="#d9c4ff" stroke-width="1" aria-hidden="true">
+  <path d="M0 0 L150 0 M0 0 L0 150 M0 0 L130 75 M0 0 L75 130 M0 0 L148 30 M0 0 L30 148"/>
+  <path d="M0 28 Q22 22 28 0 M0 52 Q40 44 52 0 M0 80 Q62 66 80 0 M0 112 Q86 90 112 0"/>
+</svg>
+<svg class="hwWeb r" viewBox="0 0 150 150" fill="none" stroke="#d9c4ff" stroke-width="1" aria-hidden="true">
+  <path d="M0 0 L150 0 M0 0 L0 150 M0 0 L130 75 M0 0 L75 130 M0 0 L148 30 M0 0 L30 148"/>
+  <path d="M0 28 Q22 22 28 0 M0 52 Q40 44 52 0 M0 80 Q62 66 80 0 M0 112 Q86 90 112 0"/>
+</svg>
 <div class="wrap">
 <header>
   <div class="logo"><i></i>LICEY <span>DROP</span></div>
   <div class="bal">
     <div class="who" id="who" style="display:none">👤 <b id="whoName"></b></div>
     <div class="balance">Баланс <b id="bal">400</b></div>
+    <div class="balance candyBal" title="Конфеты">🍬 <b id="candyBal">0</b></div>
+    <button class="btn icon" id="dailyBtn" title="Ежедневные награды">🎁</button>
     <button class="btn icon" id="reset" title="Сбросить прогресс">↻</button>
     <button class="btn" id="logout" title="Выйти" style="display:none">Выйти</button>
   </div>
 </header>
 
 <nav class="mainNav" id="mainNav">
-  <button type="button" class="navItem" data-nav="cases"><span class="ni">🎁</span><span class="nt">Кейсы</span></button>
-  <button type="button" class="navItem" data-nav="inv"><span class="ni">🎒</span><span class="nt">Инвентарь</span></button>
-  <button type="button" class="navItem" data-nav="arena"><span class="ni">⚡</span><span class="nt">Апгрейд</span></button>
-  <button type="button" class="navItem" data-nav="shop"><span class="ni">🛒</span><span class="nt">Магазин</span></button>
-  <button type="button" class="navItem" data-nav="board"><span class="ni">🏆</span><span class="nt">Топ</span></button>
+  <button type="button" class="navItem" data-nav="cases"><span class="ni">🎃</span><span class="nt">Кейсы</span></button>
+  <button type="button" class="navItem" data-nav="inv"><span class="ni">🦇</span><span class="nt">Инвентарь</span></button>
+  <button type="button" class="navItem" data-nav="arena"><span class="ni">🔮</span><span class="nt">Апгрейд</span></button>
+  <button type="button" class="navItem" data-nav="shop"><span class="ni">🕸️</span><span class="nt">Магазин</span></button>
+  <button type="button" class="navItem hot" data-nav="event"><span class="ni">👻</span><span class="nt">Ивент</span></button>
+  <button type="button" class="navItem" data-nav="board"><span class="ni">💀</span><span class="nt">Топ</span></button>
 </nav>
+
+<div class="hwBanner" id="hwBanner" hidden><span>🎃</span><span id="hwBannerText"></span><span>🦇</span></div>
+
+<div class="nightBar" id="nightBar"></div>
+<div class="potBar" id="potBar"></div>
 
 <div class="stats">
   <div class="stat"><div class="l">Учителей собрано</div><div class="v" id="stCount">0</div></div>
@@ -431,7 +591,7 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
 
 <div class="view" id="viewCases">
 <div class="shead" id="casesSection"><h2>Кейсы лицея</h2><p>Шансы честные и показаны заранее</p></div>
-<p class="note">Изредка учитель выпадает в мутации: <b style="color:#ffcb52">Gold ×3</b> к цене или <b style="color:#ff8fe0">Rainbow ×10</b>. Мутации нельзя купить — только выбить в кейсе или заапгрейдить.</p>
+<p class="note">Изредка учитель выпадает в мутации: <b style="color:#ffcb52">Gold ×3</b> к цене или <b style="color:#ff8fe0">Rainbow ×10</b>. Мутации нельзя купить — только выбить в кейсе или заапгрейдить. 🌙 Ночью (18:00–06:00) шанс мутаций ×1.5.</p>
 <div class="cases" id="cases"></div>
 </div>
 
@@ -510,6 +670,21 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   <div style="margin-top:12px"><button class="btn" id="lbRefresh" style="width:100%">Обновить</button></div>
 </section>
 
+<section class="view" id="eventSection">
+  <div class="shead"><h2>🎃 Ночь тыквенных учителей</h2><p id="evTimer"></p></div>
+  <p class="note">Копите 🍬 конфеты, меняйте их в лавке и вместе с другими игроками побеждайте <b>Призрака БudkО</b>. Ночью (18:00–06:00) конфет в 2 раза больше!</p>
+  <div style="margin-bottom:12px"><button class="btn sm" id="updOpen">📜 Что нового</button></div>
+  <div class="panel boss" id="bossPanel"></div>
+  <div class="evGrid">
+    <section class="panel"><h3>🍬 Конфетная лавка</h3><div id="candyShop"></div></section>
+    <section class="panel"><h3>🏆 Хеллоуинский топ</h3>
+      <div class="lbTabs"><div class="evTab active" data-ev="candyTotal">Конфеты</div><div class="evTab" data-ev="dmg">Урон по боссу</div></div>
+      <div class="lbList" id="evTop"></div>
+      <div id="topReward"></div>
+    </section>
+  </div>
+</section>
+
 <footer>
   Licey Drop — развлекательный симулятор апгрейда. Никаких реальных денег и настоящих ставок.<br>
   Все «предметы» — шуточные карточки учителей, шансы выпадения показаны честно.
@@ -537,6 +712,26 @@ footer{margin-top:34px;text-align:center;font-size:11.5px;color:var(--dim);line-
   </div>
 </div>
 
+<div id="updOverlay">
+  <div class="updCard">
+    <div class="updHead"><h3>📜 Что нового — Хеллоуин-обновление</h3><p>Всё, что появилось в игре. Это окно показывается один раз.</p></div>
+    <div class="updBody" id="updBody"></div>
+    <div class="updFoot"><button class="btn primary" id="updClose">🎃 Понятно, играть!</button></div>
+  </div>
+</div>
+
+<div id="dailyOverlay">
+  <div class="dailyCard">
+    <h3>🎁 Ежедневные награды</h3>
+    <p class="dailySub" id="dailySub"></p>
+    <div class="dailyGrid" id="dailyGrid"></div>
+    <div class="dailyBtns">
+      <button class="btn primary" id="dailyClaim">Забрать награду</button>
+      <button class="btn" id="dailyClose">Закрыть</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -547,41 +742,47 @@ const RAR = {
 };
 
 const TEACHERS = [
-  {id:"irina-v",name:"Ирина Владимировна",rarity:"common",price:15,png:"cards/Irina-Vladimirovna-common.png",emoji:"👩‍🏫"},
-  {id:"elena-o",name:"Елена Олеговна",rarity:"common",price:25,png:"cards/Elena-Olegovna-common.png",emoji:"👩‍🏫"},
-  {id:"sergey-k",name:"Сергей Коваленко",rarity:"common",price:40,png:"cards/Sergey-Kovalenko-common.png",emoji:"👨‍🏫"},
-  {id:"yuriy-n",name:"Юрий Николаевич",rarity:"common",price:60,png:"cards/Yuri-Nikolaevich-common.png",emoji:"👨‍🏫"},
-  {id:"vitaliy-a",name:"Виталий Андреевич",rarity:"common",price:90,png:"cards/Vitaly-Andreevich-common.png",emoji:"👨‍🏫"},
+  {id:"irina-v",name:"Ирина Владимировна",rarity:"common",price:20,png:"cards/Irina-Vladimirovna-common.png",emoji:"👩‍🏫"},
+  {id:"elena-o",name:"Елена Олеговна",rarity:"common",price:35,png:"cards/Elena-Olegovna-common.png",emoji:"👩‍🏫"},
+  {id:"sergey-k",name:"Сергей Коваленко",rarity:"common",price:55,png:"cards/Sergey-Kovalenko-common.png",emoji:"👨‍🏫"},
+  {id:"yuriy-n",name:"Юрий Николаевич",rarity:"common",price:85,png:"cards/Yuri-Nikolaevich-common.png",emoji:"👨‍🏫"},
+  {id:"vitaliy-a",name:"Виталий Андреевич",rarity:"common",price:130,png:"cards/Vitaly-Andreevich-common.png",emoji:"👨‍🏫"},
 
-  {id:"alexandr-a",name:"Александр Анатольевич",rarity:"rare",price:130,png:"cards/Alexander-Anatolyevich-rare.png",emoji:"🧑‍🏫"},
-  {id:"anna-n",name:"Анна Николаевна",rarity:"rare",price:190,png:"cards/Anna-Nikolaevna-rare.png",emoji:"👩‍🏫"},
-  {id:"bogdashevskaya",name:"Богдашевская",rarity:"rare",price:260,png:"cards/Bogdashevskaya-rare.png",emoji:"👩‍🔬"},
-  {id:"ovsyannikov",name:"Овсянников",rarity:"rare",price:340,png:"cards/Ovsyannikov-rare.png",emoji:"🧑‍🔬"},
+  {id:"alexandr-a",name:"Александр Анатольевич",rarity:"rare",price:190,png:"cards/Alexander-Anatolyevich-rare.png",emoji:"🧑‍🏫"},
+  {id:"anna-n",name:"Анна Николаевна",rarity:"rare",price:280,png:"cards/Anna-Nikolaevna-rare.png",emoji:"👩‍🏫"},
+  {id:"bogdashevskaya",name:"Богдашевская",rarity:"rare",price:400,png:"cards/Bogdashevskaya-rare.png",emoji:"👩‍🔬"},
+  {id:"ovsyannikov",name:"Овсянников",rarity:"rare",price:560,png:"cards/Ovsyannikov-rare.png",emoji:"🧑‍🔬"},
 
-  {id:"alena-i",name:"Алена Игоревна",rarity:"epic",price:675,png:"cards/Alena-Igorevna-epic.png",emoji:"🧙‍♀️"},
-  {id:"olga-v",name:"Ольга Виталиевна",rarity:"epic",price:975,png:"cards/Olga-Vitalievna-epic.png",emoji:"🧙‍♀️"},
-  {id:"nataliya-v",name:"Наталия Валериевна",rarity:"epic",price:1350,png:"cards/Nataliya-Valerievna-epic.png",emoji:"🧝‍♀️"},
-  {id:"oksana-i",name:"Оксана Ивановна",rarity:"epic",price:1875,png:"cards/Oksana-Ivanovna-epic.png",emoji:"🧝‍♀️"},
+  {id:"alena-i",name:"Алена Игоревна",rarity:"epic",price:950,png:"cards/Alena-Igorevna-epic.png",emoji:"🧙‍♀️"},
+  {id:"olga-v",name:"Ольга Виталиевна",rarity:"epic",price:1400,png:"cards/Olga-Vitalievna-epic.png",emoji:"🧙‍♀️"},
+  {id:"nataliya-v",name:"Наталия Валериевна",rarity:"epic",price:2000,png:"cards/Nataliya-Valerievna-epic.png",emoji:"🧝‍♀️"},
+  {id:"svyatik",name:"Святик",rarity:"epic",price:2400,png:"cards/святик-epic.png",emoji:"🧚"},
+  {id:"oksana-i",name:"Оксана Ивановна",rarity:"epic",price:2900,png:"cards/Oksana-Ivanovna-epic.png",emoji:"🧝‍♀️"},
 
-  {id:"viktor-v",name:"Виктор Викентиевич",rarity:"mythic",price:2550,png:"cards/Viktor-Vikentievich-mythic.png",emoji:"🧛"},
-  {id:"vera-f",name:"Вера Федоровна",rarity:"mythic",price:3750,png:"cards/Vera-Fyodorovna-mythic.png",emoji:"🧙‍♀️"},
-  {id:"tatyana-l",name:"Татьяна Леонидовна",rarity:"mythic",price:5700,png:"cards/Tatyana-Leonidovna-mythic.png",emoji:"🧞‍♀️"},
+  {id:"viktor-v",name:"Виктор Викентиевич",rarity:"mythic",price:4200,png:"cards/Viktor-Vikentievich-mythic.png",emoji:"🧛"},
+  {id:"vera-f",name:"Вера Федоровна",rarity:"mythic",price:6500,png:"cards/Vera-Fyodorovna-mythic.png",emoji:"🧙‍♀️"},
+  {id:"demid",name:"Демид",rarity:"mythic",price:8000,png:"cards/демид-mythic.png",emoji:"🧟"},
+  {id:"tatyana-l",name:"Татьяна Леонидовна",rarity:"mythic",price:10000,png:"cards/Tatyana-Leonidovna-mythic.png",emoji:"🧞‍♀️"},
 
-  {id:"ludmila",name:"Людмила",rarity:"legendary",price:11700,png:"cards/Lyudmila-legendary.png",emoji:"👑"},
-  {id:"muntyanu",name:"Мунтяну",rarity:"legendary",price:11700,png:"cards/Muntyanu-legendary.png",emoji:"👑"},
-  {id:"irina-g",name:"Ирина Григориевна",rarity:"legendary",price:27000,png:"cards/Irina-Grigorievna-legendary.png",emoji:"👑"},
+  {id:"ludmila",name:"Людмила",rarity:"legendary",price:15000,png:"cards/Lyudmila-legendary.png",emoji:"👑"},
+  {id:"muntyanu",name:"Мунтяну",rarity:"legendary",price:18000,png:"cards/Muntyanu-legendary.png",emoji:"👑"},
+  {id:"petryuk",name:"Петрюк",rarity:"legendary",price:25000,png:"cards/петрюк-legendary.png",emoji:"🦅"},
+  {id:"sir",name:"Сир",rarity:"legendary",price:30000,png:"cards/сир-legendary.png",emoji:"🧀"},
+  {id:"irina-g",name:"Ирина Григориевна",rarity:"legendary",price:36000,png:"cards/Irina-Grigorievna-legendary.png",emoji:"👑"},
 
-  {id:"nat-tech",name:"Наталия Технолоджия",rarity:"exotic",price:27000,png:"cards/Nataliya-Tekhnolodzhiya-exotic.png",emoji:"🤖"},
-  {id:"barabash",name:"Барабаш",rarity:"exotic",price:48000,png:"cards/Barabash-exotic.png",emoji:"🦸"},
+  {id:"nat-tech",name:"Наталия Технолоджия",rarity:"exotic",price:40000,png:"cards/Nataliya-Tekhnolodzhiya-exotic.png",emoji:"🤖"},
+  {id:"lukasik",name:"Лукасик",rarity:"exotic",price:52000,png:"cards/лукасик-exotic.png",emoji:"🦾"},
+  {id:"barabash",name:"Барабаш",rarity:"exotic",price:70000,png:"cards/Barabash-exotic.png",emoji:"🦸"},
 
-  {id:"dmitro",name:"Дмитро",rarity:"secret",price:82500,png:"cards/Dmytro-secret.png",emoji:"🔮"},
-  {id:"brudin",name:"Брудин",rarity:"secret",price:142500,png:"cards/Brudin-secret.png",emoji:"💠"},
+  {id:"dmitro",name:"Дмитро",rarity:"secret",price:120000,png:"cards/Dmytro-secret.png",emoji:"🔮"},
+  {id:"brudin",name:"Брудин",rarity:"secret",price:210000,png:"cards/Brudin-secret.png",emoji:"💠"},
 
-  {id:"budko",name:"БudkО",rarity:"glitch",price:375000,png:"cards/BudkO-glitch.png",emoji:"👾"}
+  {id:"budko",name:"БudkО",rarity:"glitch",price:500000,png:"cards/BudkO-glitch.png",emoji:"👾"}
 ];
 
 const byId = id => TEACHERS.find(t=>t.id===id);
 const SELL_RATE = 1;
+const HARD = 3; // во сколько раз реже выпадают редкости выше «обычного» в кейсах
 const CHEAPEST = Math.min(...TEACHERS.map(t=>t.price));
 
 /* мутации: нельзя купить, только выбить в кейсе или получить апгрейдом */
@@ -596,10 +797,11 @@ function variant(t, mut){
   return {...t, mut, price: Math.round(t.price*m.mult), png: t.png ? t.png.replace(/\.png$/i, m.suffix+'.png') : t.png};
 }
 function mutClass(t){ return (t && t.mut) ? ' '+MUT[t.mut].cls : ''; }
-function rollMutation(){
+function rollMutation(luck){
+  const m = (isNight() ? NIGHT_MUT : 1) * (luck || 1);   // ночью шанс мутаций ×1.5
   const r = Math.random();
-  if(r < 0.015) return 'rainbow';   // 1.5%
-  if(r < 0.115) return 'gold';      // 10%
+  if(r < 0.015*m) return 'rainbow';   // 1.5% (ночью 2.25%)
+  if(r < 0.115*m) return 'gold';      // 10%  (ночью 15%)
   return null;
 }
 
@@ -616,20 +818,26 @@ function imgFallback(img){
 }
 
 const CASES = [
-  {id:"starter",name:"Стартовый кейс",emoji:"🎒",price:200,
+  {id:"starter",name:"Стартовый кейс",emoji:"🍬",price:200,
    desc:"Самый дешёвый вход. Отличный способ начать коллекцию.",
    tier:{common:52,rare:40,epic:4.5,mythic:2,legendary:1,exotic:0.35,secret:0.1,glitch:0.05}},
-  {id:"lyceum",name:"Кейс лицея",emoji:"🏫",price:750,
-   desc:"Упор на редких и эпических учителей.",
+  {id:"lyceum",name:"Кейс лицея",emoji:"🏚️",price:750,
+   desc:"Редкие и эпические — только если повезёт.",
    tier:{common:40,rare:28,epic:16,mythic:8,legendary:5,exotic:2,secret:0.7,glitch:0.3}},
-  {id:"director",name:"Кейс директора",emoji:"🎓",price:4500,
-   desc:"Обычных почти нет: мифики и легендарные — основной улов.",
+  {id:"director",name:"Кейс директора",emoji:"🧛",price:4500,
+   desc:"Дорого и жутко: топовые учителя выпадают редко.",
    tier:{common:26,rare:24,epic:14,mythic:12,legendary:14,exotic:6,secret:2.8,glitch:1.2}},
-  {id:"secret",name:"Секретный кейс",emoji:"🔮",price:35000,
-   desc:"Топ лицея и минимум обычных.",
+  {id:"secret",name:"Секретный кейс",emoji:"💀",price:35000,
+   desc:"Высокий риск, высокая цена. Кошелёк предупреждён.",
    tier:{common:4,rare:5,epic:11,mythic:18,legendary:22,exotic:24,secret:11,glitch:5}}
 ];
 const RARITY_ORDER = ["common","rare","epic","mythic","legendary","exotic","secret","glitch"];
+/* сложность: шансы всех редкостей выше обычной делим на HARD, освободившийся шанс уходит в «обычных» */
+CASES.forEach(c=>{
+  let moved = 0;
+  RARITY_ORDER.forEach(r=>{ if(r==='common') return; const nv = c.tier[r]/HARD; moved += c.tier[r]-nv; c.tier[r] = nv; });
+  c.tier.common += moved;
+});
 CASES.forEach(c=>{
   const byRarity = {};
   TEACHERS.forEach(t=>{ (byRarity[t.rarity] = byRarity[t.rarity]||[]).push(t.id); });
@@ -648,6 +856,10 @@ const col = r => getComputedStyle(document.documentElement).getPropertyValue('--
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 const pct = c => (c*100 < 0.01 ? (c*100).toFixed(4) : (c*100).toFixed(2)).replace(/\.?0+$/,'') + '%';
 
+function defEv(){ return {dmg:0, candyTotal:0, lastDaily:'', bossDown:false, bossClaimed:false, topClaimed:false}; }
+const UPDATE_ID = 'halloween-2026-10-25';   // сменить строку — окно «Что нового» покажется всем снова
+function defDaily(){ return {day:0, last:'', total:0}; }          // day = последний полученный день цикла (0–14)
+function defPotions(){ return {luck:0, coin:0}; }                 // остаток зарядов зелий
 const defStats = () => ({
   spent:0, casesOpened:0, bestPrice:0, bestName:"",
   upgrades:0, upgradesWon:0,
@@ -658,6 +870,8 @@ const S = {
   bal: 400, inv: [], from: [], to: null, toMut: null, tabMult: null,
   spinning: false, caseSpinning: false, active: null, rot: 0, feed: [],
   freeTaken: 0,
+  candies: 0, tokens: {}, shield: 0, ev: defEv(),
+  daily: defDaily(), potions: defPotions(), seenUpdate: '',
   stats: defStats()
 };
 const $ = i => document.getElementById(i);
@@ -674,13 +888,20 @@ let userId = null, userName = '', sessionToken = null, kicked = false, hbTimer =
 const newToken = () => (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now());
 
 
-const snapshot = () => ({bal:S.bal, inv:S.inv, feed:S.feed, freeTaken:S.freeTaken, stats:S.stats});
+const snapshot = () => ({bal:S.bal, inv:S.inv, feed:S.feed, freeTaken:S.freeTaken, candies:S.candies, tokens:S.tokens, shield:S.shield, ev:S.ev, daily:S.daily, potions:S.potions, seenUpdate:S.seenUpdate, stats:S.stats});
 function applyState(d){
   if(!d) return;
   S.bal = typeof d.bal === 'number' ? d.bal : S.bal;
   S.inv = Array.isArray(d.inv) ? d.inv : [];
   S.feed = Array.isArray(d.feed) ? d.feed : [];
   S.freeTaken = d.freeTaken || 0;
+  S.candies = d.candies || 0;
+  S.tokens = (d.tokens && typeof d.tokens==='object') ? d.tokens : {};
+  S.shield = d.shield || 0;
+  S.ev = Object.assign(defEv(), d.ev||{});
+  S.daily = Object.assign(defDaily(), d.daily||{});
+  S.potions = Object.assign(defPotions(), d.potions||{});
+  S.seenUpdate = d.seenUpdate || '';
   S.stats = Object.assign(defStats(), d.stats||{});
 }
 function localState(){
@@ -752,6 +973,7 @@ async function enterGame(user, remember = true){
   $('whoName').textContent = userName;
   $('logout').style.display = 'inline-flex';
   refresh();
+  claimDaily();
 }
 
 
@@ -770,7 +992,7 @@ async function handleAuth(){
       toast('С возвращением, '+user.name+'!');
     }else{
       // регистрация: новый аккаунт всегда начинает с нуля, гостевой прогресс не переносится
-      const startState = {bal:400, inv:[], feed:[], freeTaken:0, stats:defStats()};
+      const startState = {bal:400, inv:[], feed:[], freeTaken:0, candies:0, tokens:{}, shield:0, ev:defEv(), daily:defDaily(), potions:defPotions(), seenUpdate:'', stats:defStats()};
       try{ localStorage.removeItem(LS_STATE); }catch(e){}
       const { data: created, error: insErr } = await sbc.from(TABLE)
         .insert([{ name, password: pass, state: startState, balance: startState.bal }])
@@ -889,7 +1111,8 @@ function renderCases(){
       <h4>${c.name}</h4>
       <p>${c.desc}</p>
       <div class="price">${fmt(c.price)} ₴</div>
-      <button class="btn primary" data-open-case="${c.id}">Открыть кейс</button>
+      <div class="candyHint">🍬 +${CASE_CANDY[c.id]||1}${isNight()?' ×2 🌙':''} за открытие</div>
+      <button class="btn primary" data-open-case="${c.id}">${(S.tokens[c.id]||0)>0?'🎟️ Открыть бесплатно ('+S.tokens[c.id]+')':'Открыть кейс'}</button>
       <details class="oddsBox"><summary>Шансы по редкости</summary>${rows}</details>
     </div>`;
   }).join('');
@@ -944,6 +1167,7 @@ function chanceOf(){
 }
 function refresh(){
   $('bal').textContent = fmt(S.bal);
+  $('candyBal').textContent = fmt(S.candies);
   const {c,m,f,t,fPrice,cash} = (S.spinning && S.active) ? S.active : chanceOf();
   $('chance').innerHTML = (c*100).toFixed(2).replace(/\.?0+$/,'')+'%<small>ШАНС АПГРЕЙДА</small>';
   $('mult').textContent = m ? 'множитель ×'+m.toFixed(2) : 'множитель ×0.00';
@@ -956,7 +1180,7 @@ function refresh(){
   $('go').textContent = (f&&t&&t.price<=fPrice) ? 'ЦЕЛЬ ДОЛЖНА БЫТЬ ДОРОЖЕ' : 'АПГРЕЙД';
   $('sellAll').disabled = !S.inv.length;
   document.querySelectorAll('.mutChip').forEach(el=>el.classList.toggle('active',(el.dataset.mut||null)===(S.toMut||null)));
-  renderCases(); renderShop(); renderInv(); renderFeed(); renderStats(); renderRescue(); save();
+  renderCases(); renderShop(); renderInv(); renderFeed(); renderStats(); renderRescue(); renderEvent(); renderPotBar(); renderDailyBtn(); save();
 }
 
 function addToInv(id, mut){
@@ -979,7 +1203,9 @@ document.addEventListener('click', e=>{
   const sell = e.target.closest('[data-sell]');
   if(sell){
     const uid=sell.dataset.sell, it=S.inv.find(i=>i.uid===uid);
-    S.bal += Math.round(variant(byId(it.id), it.mut).price * SELL_RATE);
+    const pay = paySale(Math.round(variant(byId(it.id), it.mut).price * SELL_RATE));
+    S.bal += pay.total;
+    if(pay.bonus) toast('🪙 Зелье монет: +'+fmt(pay.bonus)+' ₴');
     S.inv = S.inv.filter(i=>i.uid!==uid);
     if(S.from.includes(uid)){ S.from = S.from.filter(u=>u!==uid); $('fromCash').value=0; }
     refresh(); return;
@@ -1011,6 +1237,7 @@ $('q').addEventListener('input', renderShop);
 $('fromCash').addEventListener('input', refresh);
 $('reset').onclick = ()=>{ if(confirm('Сбросить прогресс?')){
   S.bal=400;S.inv=[];S.from=[];S.to=null;S.toMut=null;S.tabMult=null;S.active=null;S.feed=[];S.freeTaken=0;
+  S.candies=0;S.tokens={};S.shield=0;S.ev=defEv();S.daily=defDaily();S.potions=defPotions();
   S.stats=defStats();
   $('fromCash').value=0; refresh(); } };
 
@@ -1026,8 +1253,9 @@ $('freeBtn').onclick = ()=>{
 $('sellAll').onclick = ()=>{
   if(!S.inv.length) return;
   const total = S.inv.reduce((s,it)=>s+Math.round(variant(byId(it.id),it.mut).price * SELL_RATE),0);
-  S.bal += total; S.inv = []; S.from = []; $('fromCash').value=0;
-  toast('Продано всё на '+fmt(total)+' ₴');
+  const pay = paySale(total);
+  S.bal += pay.total; S.inv = []; S.from = []; $('fromCash').value=0;
+  toast('Продано всё на '+fmt(pay.total)+' ₴'+(pay.bonus?' (🪙 +'+fmt(pay.bonus)+')':''));
   refresh();
 };
 document.querySelector('[data-buy]').onclick = ()=>{
@@ -1053,6 +1281,7 @@ $('go').onclick = ()=>{
   if(calc.cash > S.bal){ toast('Недостаточно средств для добавленной суммы.'); return; }
 
   S.active = calc;
+  const usedItems = selectedItems();
   const usedIds = new Set(S.from);
   S.inv = S.inv.filter(i=>!usedIds.has(i.uid));
   S.bal -= calc.cash;
@@ -1071,6 +1300,7 @@ $('go').onclick = ()=>{
   setTimeout(()=>{
     S.spinning = false;
     S.stats.upgrades = (S.stats.upgrades||0) + 1;
+    dealDamage(calc.fPrice); addCandies(win?3:1);
     if(win){
       addToInv(calc.t.id, calc.t.mut);
       S.stats.upgradesWon = (S.stats.upgradesWon||0) + 1;
@@ -1081,6 +1311,10 @@ $('go').onclick = ()=>{
         S.stats.bestUpgradeChance = calc.c;
       }
       $('status').textContent = `АПГРЕЙД УДАЧНЫЙ — ${calc.t.name}${calc.t.mut?' ('+MUT[calc.t.mut].label+')':''}!`;
+      $('status').className='status win';
+    }else if(S.shield>0){
+      S.shield--; S.inv = usedItems.concat(S.inv); S.bal += calc.cash;
+      $('status').textContent = '🛡️ НЕУДАЧА — но щит спас ставку: всё вернулось';
       $('status').className='status win';
     }else{
       $('status').textContent = calc.cash>0
@@ -1107,21 +1341,26 @@ function openCase(caseId){
   if(!requireAuth()) return;
   if(S.caseSpinning) return;
   const cs = caseById(caseId);
-  if(S.bal < cs.price){ toast('Недостаточно средств на этот кейс'); return; }
+  const useToken = (S.tokens[cs.id]||0) > 0;
+  if(!useToken && S.bal < cs.price){ toast('Недостаточно средств на этот кейс'); return; }
   S.caseSpinning = true;
-  S.bal -= cs.price; S.stats.spent += cs.price; S.stats.casesOpened++;
+  if(useToken){ S.tokens[cs.id]--; S.stats.casesOpened++; }
+  else { S.bal -= cs.price; S.stats.spent += cs.price; S.stats.casesOpened++; }
+  const lucky = S.potions.luck > 0;                 // 🍀 зелье удачи: тратит 1 заряд на открытие
+  if(lucky) S.potions.luck--;
+  const pool = lucky ? cs.pool.map(p=>({id:p.id, w: byId(p.id).rarity==='common' ? p.w : p.w*LUCK_MULT})) : cs.pool;
   refresh();
 
-  const winnerId = weightedPick(cs.pool);
-  const winnerMut = rollMutation();
+  const winnerId = weightedPick(pool);
+  const winnerMut = rollMutation(lucky ? LUCK_MUT : 1);
   const stripLen = 55, winIndex = 46;
-  const strip = Array.from({length:stripLen}, ()=>({id:weightedPick(cs.pool), mut:rollMutation()}));
+  const strip = Array.from({length:stripLen}, ()=>({id:weightedPick(pool), mut:rollMutation()}));
   strip[winIndex] = {id:winnerId, mut:winnerMut};
 
   const overlay = document.createElement('div');
   overlay.className = 'overlay';
   overlay.innerHTML = `
-    <h3>${cs.emoji} ${cs.name}</h3>
+    <h3>${cs.emoji} ${cs.name}${lucky?' 🍀':''}</h3>
     <div class="reelBox">
       <div class="pointer"></div>
       <div class="reelTrack" id="reelTrack">
@@ -1142,10 +1381,11 @@ function openCase(caseId){
 
   setTimeout(()=>{
     track.querySelectorAll('.reelItem')[winIndex].classList.add('landed');
+    dealDamage(cs.price); addCandies(CASE_CANDY[cs.id]||1);
     const v = variant(byId(winnerId), winnerMut);
     if(v.price > (S.stats.bestDropPrice||0)){
-      const totalW = cs.pool.reduce((a,b)=>a+b.w,0);
-      const dropW = cs.pool.filter(x=>x.id===winnerId).reduce((a,b)=>a+b.w,0);
+      const totalW = pool.reduce((a,b)=>a+b.w,0);
+      const dropW = pool.filter(x=>x.id===winnerId).reduce((a,b)=>a+b.w,0);
       S.stats.bestDropPrice = v.price;
       S.stats.bestDropName = v.name + (v.mut?` (${MUT[v.mut].label})`:'');
       S.stats.bestDropCase = cs.name;
@@ -1158,19 +1398,19 @@ function openCase(caseId){
       <div class="dropActions">
         <button class="btn primary" id="keepDrop">Оставить учителя</button>
         ${(()=>{
-          const money = Math.round(v.price*SELL_RATE);
+          const base = Math.round(v.price*SELL_RATE), bonus = coinBonus(base), money = base + bonus;
           const diff = Math.round((money - cs.price)/cs.price*100);
           const ok = diff >= 0;
-          return `<button class="btn ${ok?'gold':'bad'}" id="sellDrop">Продать за ${fmt(money)} ₴<span class="sellPct">${ok?'в окупе +':'не в окупе −'}${Math.abs(diff)}% к цене кейса</span></button>`;
+          return `<button class="btn ${ok?'gold':'bad'}" id="sellDrop">Продать за ${fmt(money)} ₴<span class="sellPct">${ok?'в окупе +':'не в окупе −'}${Math.abs(diff)}% к цене кейса${bonus?' · 🪙 +'+fmt(bonus):''}</span></button>`;
         })()}
       </div>
     `;
     const finish = ()=>{ overlay.remove(); S.caseSpinning=false; refresh(); };
     $('keepDrop').onclick = ()=>{ addToInv(winnerId, winnerMut); toast('Оставлен: '+v.name); finish(); };
     $('sellDrop').onclick = ()=>{
-      const money = Math.round(v.price*SELL_RATE);
-      S.bal += money;
-      toast('Продан: '+v.name+' за '+fmt(money)+' ₴');
+      const pay = paySale(Math.round(v.price*SELL_RATE));
+      S.bal += pay.total;
+      toast('Продан: '+v.name+' за '+fmt(pay.total)+' ₴'+(pay.bonus?' (🪙 +'+fmt(pay.bonus)+')':''));
       finish();
     };
     refresh();
@@ -1204,11 +1444,13 @@ async function loadLeaderboard(){
         id:r.id, name:r.name,
         bal: typeof s.bal === 'number' ? s.bal : (r.balance||0),
         invCount: Array.isArray(s.inv) ? s.inv.length : 0,
-        st: Object.assign(defStats(), s.stats||{})
+        st: Object.assign(defStats(), s.stats||{}),
+        ev: Object.assign(defEv(), s.ev||{})
       };
     });
   }catch(e){ lbPlayers = []; console.error(e); }
   renderLeaderboard();
+  renderEvent();
 }
 function renderLeaderboard(){
   const mode = LB_MODES[lbMode];
@@ -1238,6 +1480,8 @@ function showProfile(id){
       ? `${s.bestDropCase? s.bestDropCase+' → ':''}${s.bestDropName} — ${fmt(s.bestDropPrice)} ₴${s.bestDropChance? ` (шанс ${pct(s.bestDropChance)})`:''}`
       : '—'],
     ['Лучшая карточка', s.bestName ? `${s.bestName} — ${fmt(s.bestPrice)} ₴` : '—'],
+    ['🍬 Конфет собрано (ивент)', fmt((p.ev&&p.ev.candyTotal)||0)],
+    ['👻 Урон по Призраку БudkО', fmt((p.ev&&p.ev.dmg)||0)],
     ['Кейсов открыто', fmt(s.casesOpened||0)],
     ['Апгрейдов сделано', fmt(s.upgrades||0)],
     ['Удачных апгрейдов', `${fmt(s.upgradesWon||0)} (${winRate}%)`],
@@ -1256,8 +1500,338 @@ $('profOverlay').onclick = e=>{ if(e.target===$('profOverlay')) $('profOverlay')
 $('lbRefresh').onclick = ()=>{ $('lbList').innerHTML = '<div class="empty">Загрузка…</div>'; loadLeaderboard(); };
 setInterval(()=>loadLeaderboard(), 60000);
 
+
+/* ================= 👻 ИВЕНТ: конфеты, босс, топ, ночной бонус ================= */
+const EVENT_END = new Date(2026, 9, 31, 23, 59, 59);   // конец ивента (31 октября, 23:59:59 по времени игрока)
+const BOSS_HP = 1500000;                              // общее здоровье Призрака БudkО (можно менять)
+const BOSS_REWARD = {money:10000, rarity:'mythic'};   // награда каждому, кто нанёс урон
+const TOP_PRIZES = [
+  {money:50000, rarity:'legendary', label:'50 000 ₴ + случайный легендарный'},
+  {money:25000, rarity:'mythic',    label:'25 000 ₴ + случайный мифический'},
+  {money:10000, rarity:null,        label:'10 000 ₴'}
+];
+const CASE_CANDY = {starter:1, lyceum:2, director:4, secret:8};
+const NIGHT_MUT = 1.5, NIGHT_CANDY = 2;               // ночной бонус (18:00–06:00 каждый день)
+
+function isNight(d){ const h=(d||new Date()).getHours(); return h>=18 || h<6; }
+const eventActive = () => Date.now() <= EVENT_END.getTime();
+const dateKey = () => { const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); };
+
+function candyPop(k, plain){
+  const el=document.createElement('div'); el.className='candyPop';
+  el.textContent='+'+k+' 🍬'+(isNight()&&!plain?' 🌙':'');
+  document.body.appendChild(el); setTimeout(()=>el.remove(),1800);
+}
+function addCandies(n){
+  if(!eventActive() || n<=0) return 0;
+  const k = n*(isNight()?NIGHT_CANDY:1);
+  S.candies += k; S.ev.candyTotal += k; candyPop(k);
+  return k;
+}
+function dealDamage(n){ if(eventActive() && n>0) S.ev.dmg += Math.round(n); }
+/* --- 🎁 ежедневные награды (цикл 14 дней; пропуск дня сбрасывает серию) --- */
+const DAILY_REWARDS = [
+  {ico:'💰', txt:'300 ₴ + 5 🍬',                          money:300, candies:5},
+  {ico:'🍬', txt:'Стартовый кейс + 8 🍬',                 tokens:{starter:1}, candies:8},
+  {ico:'🍀', txt:'Зелье удачи ×3',                        luck:3},
+  {ico:'🪙', txt:'500 ₴ + Зелье монет ×5',                money:500, coin:5},
+  {ico:'🛡️', txt:'Щит + 12 🍬',                           shield:1, candies:12},
+  {ico:'🏚️', txt:'Кейс лицея',                            tokens:{lyceum:1}},
+  {ico:'🧙', txt:'Эпический учитель + 15 🍬',             teacher:'epic', candies:15, big:true},
+  {ico:'💰', txt:'800 ₴ + Зелье удачи ×3',                money:800, luck:3},
+  {ico:'🍬', txt:'2 Стартовых кейса + 20 🍬',             tokens:{starter:2}, candies:20},
+  {ico:'🪙', txt:'1 500 ₴ + Зелье монет ×5',              money:1500, coin:5},
+  {ico:'🍀', txt:'Зелье удачи ×5 + 20 🍬',                luck:5, candies:20},
+  {ico:'🏚️', txt:'2 Кейса лицея',                         tokens:{lyceum:2}},
+  {ico:'💎', txt:'3 000 ₴ + 30 🍬 + Щит',                 money:3000, candies:30, shield:1},
+  {ico:'👑', txt:'Мифический учитель + 5 000 ₴ + 40 🍬 + Зелье удачи ×5', teacher:'mythic', money:5000, candies:40, luck:5, big:true}
+];
+const DAILY_LEN = DAILY_REWARDS.length;
+const dayNum = d => Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())/86400000);
+const keyNum = k => { const [y,m,d] = k.split('-').map(Number); return Math.floor(Date.UTC(y,m-1,d)/86400000); };
+function dailyInfo(){
+  const D = S.daily;
+  if(D.last === dateKey()) return {claimed:true, next:D.day>=DAILY_LEN?1:D.day+1, broken:false};
+  if(!D.last) return {claimed:false, next:1, broken:false};
+  const gap = dayNum(new Date()) - keyNum(D.last);
+  if(gap === 1) return {claimed:false, next:D.day>=DAILY_LEN?1:D.day+1, broken:false};
+  return {claimed:false, next:1, broken:true};      // пропустили день — серия сбросилась
+}
+function grantCandies(n){
+  S.candies += n; if(eventActive()) S.ev.candyTotal += n; candyPop(n, true);
+}
+function leftToMidnight(){
+  const n = new Date(), t = new Date(n.getFullYear(), n.getMonth(), n.getDate()+1);
+  const m = Math.max(0, Math.floor((t-n)/60000));
+  return Math.floor(m/60)+' ч '+(m%60)+' мин';
+}
+function renderDaily(){
+  const info = dailyInfo(), D = S.daily;
+  const done = info.claimed ? D.day : info.next-1;
+  $('dailyGrid').innerHTML = DAILY_REWARDS.map((r,i)=>{
+    const n = i+1;
+    const cls = (r.big?' big':'') + (n<=done?' done':'') + (!info.claimed && n===info.next ? ' now':'');
+    return `<div class="dc${cls}" title="${r.txt}"><div class="dn">День ${n}</div><div class="di">${r.ico}</div><div class="dt">${r.txt.split(' + ').join('<br>')}</div></div>`;
+  }).join('');
+  $('dailySub').innerHTML = info.claimed
+    ? `✅ Награда за сегодня получена (день <b>${D.day}</b> из ${DAILY_LEN}). Завтра — день <b>${info.next}</b>, через <b>${leftToMidnight()}</b>.`
+    : (info.broken ? `😢 Серия прервалась — награды снова с 1-го дня. ` : '') + `Сегодня — день <b>${info.next}</b> из ${DAILY_LEN}. Заходите каждый день: пропущенный день сбрасывает серию.`;
+  const btn = $('dailyClaim');
+  btn.disabled = info.claimed;
+  btn.textContent = info.claimed ? 'Награда получена' : '🎁 Забрать награду — день '+info.next;
+}
+function openDaily(){ renderDaily(); $('dailyOverlay').classList.add('show'); }
+function closeDaily(){ $('dailyOverlay').classList.remove('show'); }
+function renderDailyBtn(){
+  const b = $('dailyBtn'); if(b) b.classList.toggle('ready', !!userId && !dailyInfo().claimed);
+}
+function claimDailyReward(){
+  if(!requireAuth()) return;
+  const info = dailyInfo(); if(info.claimed) return;
+  const day = info.next, r = DAILY_REWARDS[day-1];
+  if(r.money){ S.bal += r.money; }
+  if(r.candies){ grantCandies(r.candies); }
+  if(r.tokens){ Object.entries(r.tokens).forEach(([id,n])=>{ for(let i=0;i<n;i++) addToken(id); }); }
+  if(r.shield){ S.shield += r.shield; }
+  if(r.luck){ S.potions.luck += r.luck; }
+  if(r.coin){ S.potions.coin += r.coin; }
+  const t = r.teacher ? giveRandom(r.teacher) : null;
+  S.daily = {day, last:dateKey(), total:(S.daily.total||0)+1};
+  toast('🎁 День '+day+': '+r.txt+(t?' → '+t.name:''));
+  refresh(); renderDaily();
+}
+function claimDaily(){                      // при входе: сначала «Что нового» (один раз), затем окно ежедневной награды
+  if(!userId) return;
+  if(S.seenUpdate !== UPDATE_ID){ openUpdate(); return; }
+  if(!dailyInfo().claimed) openDaily();
+}
+
+/* --- 📜 «Что нового» --- */
+function renderUpdate(){
+  const T = id => { const t = byId(id); return `<li class="updTeach"><span><b style="color:${col(t.rarity)}">${t.name}</b> — ${RAR[t.rarity].l}</span><span>${fmt(t.price)} ₴</span></li>`; };
+  $('updBody').innerHTML = `
+  <div class="updSec"><h4>🎃 Хеллоуин-ивент (до 31 октября, 23:59)</h4><ul>
+    <li>Копите <b>🍬 конфеты</b>: кейсы дают <b>+1 / +2 / +4 / +8</b> (Стартовый / Лицея / Директора / Секретный), удачный апгрейд <b>+3</b>, неудачный <b>+1</b>.</li>
+    <li><b>🌙 Ночной бонус</b> каждый день с 18:00 до 06:00: конфет <b>×${NIGHT_CANDY}</b>, шанс мутаций <b>×${NIGHT_MUT}</b>.</li>
+    <li><b>👻 Босс — Призрак БudkО</b>: общее здоровье на всех игроков — <b>${fmt(BOSS_HP)} HP</b>. Урон по нему — это ₴, потраченные на кейсы и ставки в апгрейдах. Бить босса можно, просто играя.</li>
+    <li>Победим Призрака до конца ивента — каждый, кто нанёс хоть 1 урона, получит <b>${fmt(BOSS_REWARD.money)} ₴</b> и случайного <b>мифического</b> учителя.</li>
+    <li><b>🏆 Хеллоуинский топ</b> по конфетам. Призы топ-3 выдаются после 31 октября: 🥇 ${TOP_PRIZES[0].label}; 🥈 ${TOP_PRIZES[1].label}; 🥉 ${TOP_PRIZES[2].label}.</li>
+    <li>Вкладка <b>«Ивент»</b> — там босс, лавка и топ.</li>
+  </ul></div>
+  <div class="updSec"><h4>🍬 Конфетная лавка</h4><ul>
+    ${CANDY_SHOP.map(it=>`<li class="updTeach"><span>${it.ico} <b>${it.name}</b> — ${it.desc}</span><span>${it.cost} 🍬</span></li>`).join('')}
+  </ul></div>
+  <div class="updSec"><h4>🎁 Ежедневные награды — до 14 дней</h4><ul>
+    <li>Кнопка <b>🎁</b> в шапке (окно само откроется при входе). Заходите <b>каждый день</b> — получайте ₴, конфеты, бесплатные кейсы, щиты и зелья.</li>
+    <li>Пропустили день — серия <b>сбрасывается</b> на день 1. После 14-го дня цикл начинается заново.</li>
+    <li>День <b>7</b> — эпический учитель, день <b>14</b> — мифический учитель + 5 000 ₴ и другие призы.</li>
+  </ul></div>
+  <div class="updSec"><h4>🧪 Зелья</h4><ul>
+    <li><b>🍀 Зелье удачи</b> — в каждом открытии кейса шансы редких дропов <b>×${LUCK_MULT}</b>, мутаций <b>×${LUCK_MUT}</b>. Один заряд = одно открытие.</li>
+    <li><b>🪙 Зелье монет</b> — <b>+${Math.round(COIN_PCT*100)}%</b> ₴ с продажи (но не больше <b>+${fmt(COIN_CAP)} ₴</b> за раз). Один заряд = одна продажа, «Продать всё» — тоже одна.</li>
+    <li>Активные зелья видны плашками сверху. Покупаются в лавке за конфеты и выпадают в ежедневных наградах.</li>
+  </ul></div>
+  <div class="updSec"><h4>👨‍🏫 Новые учителя</h4><ul>
+    ${['svyatik','demid','petryuk','sir','lukasik'].map(T).join('')}
+  </ul></div>
+  <div class="updSec"><h4>✨ И ещё</h4><ul>
+    <li>Мутации <b>Gold (×3)</b> и <b>Rainbow (×10)</b> к цене — выбиваются только из кейсов и апгрейдов.</li>
+    <li>Хеллоуинское оформление: летучие мыши, призраки, тыквы и обратный отсчёт до праздника.</li>
+  </ul></div>`;
+}
+function openUpdate(){ renderUpdate(); $('updOverlay').classList.add('show'); $('updBody').scrollTop = 0; }
+function closeUpdate(){
+  $('updOverlay').classList.remove('show');
+  if(userId && S.seenUpdate !== UPDATE_ID){ S.seenUpdate = UPDATE_ID; save(); claimDaily(); }
+}
+
+/* --- 🧪 зелья: удача (кейсы) и монеты (продажи) --- */
+const LUCK_MULT = 2;                        // шансы всех редкостей выше «обычной» ×2
+const LUCK_MUT  = 1.5;                      // шанс мутаций Gold/Rainbow ×1.5
+const COIN_PCT = 0.3, COIN_CAP = 2000;      // +30% к выручке с продажи, но не больше +2 000 ₴ за одну продажу
+const coinBonus = base => S.potions.coin>0 ? Math.min(Math.round(base*COIN_PCT), COIN_CAP) : 0;
+function paySale(base){                     // одна продажа = 1 заряд (даже если «Продать всё»)
+  const bonus = coinBonus(base);
+  if(bonus>0) S.potions.coin--;
+  return {total:base+bonus, bonus};
+}
+function renderPotBar(){
+  const el = $('potBar'); if(!el) return;
+  let h = '';
+  if(S.potions.luck>0) h += `<span class="potChip luck">🍀 Удача: открытий кейсов <b>${S.potions.luck}</b> (редкие ×${LUCK_MULT})</span>`;
+  if(S.potions.coin>0) h += `<span class="potChip coin">🪙 Монеты: продаж <b>${S.potions.coin}</b> (+${Math.round(COIN_PCT*100)}% ₴)</span>`;
+  el.innerHTML = h;
+}
+function addToken(caseId){ S.tokens[caseId] = (S.tokens[caseId]||0) + 1; }
+function giveRandom(rarity){
+  const pool = TEACHERS.filter(t=>t.rarity===rarity);
+  const t = pool[Math.floor(Math.random()*pool.length)];
+  addToInv(t.id, null);
+  return t;
+}
+
+/* --- лавка --- */
+const CANDY_SHOP = [
+  {id:'coins',  ico:'💰', name:'Мешок монет',              desc:'+400 ₴ на баланс',                          cost:10,  apply:()=>{ S.bal += 400; return '+400 ₴'; }},
+  {id:'tk_st',  ico:'🍬', name:'Бесплатный Стартовый кейс', desc:'Открывается без списания ₴',               cost:12,  apply:()=>{ addToken('starter'); return 'Токен на Стартовый кейс'; }},
+  {id:'tk_ly',  ico:'🏚️', name:'Бесплатный Кейс лицея',     desc:'Открывается без списания ₴',               cost:40,  apply:()=>{ addToken('lyceum'); return 'Токен на Кейс лицея'; }},
+  {id:'shield', ico:'🛡️', name:'Щит апгрейда',              desc:'Следующая неудача вернёт учителей и ₴',    cost:30,  apply:()=>{ S.shield++; return 'Щит куплен'; }},
+  {id:'luck_s', ico:'🍀', name:'Зелье удачи (малое)',       desc:`3 открытия кейсов: редкие дропы ×${LUCK_MULT}, мутации ×${LUCK_MUT}`,   cost:20,  apply:()=>{ S.potions.luck += 3;  return 'Зелье удачи: +3 открытия'; }},
+  {id:'luck_l', ico:'🍀', name:'Зелье удачи (большое)',     desc:`10 открытий кейсов: редкие дропы ×${LUCK_MULT}, мутации ×${LUCK_MUT}`,  cost:55,  apply:()=>{ S.potions.luck += 10; return 'Зелье удачи: +10 открытий'; }},
+  {id:'coin_s', ico:'🪙', name:'Зелье монет (малое)',       desc:`5 продаж: +${Math.round(COIN_PCT*100)}% ₴ (до +${fmt(COIN_CAP)} ₴ за продажу)`,  cost:20,  apply:()=>{ S.potions.coin += 5;  return 'Зелье монет: +5 продаж'; }},
+  {id:'coin_l', ico:'🪙', name:'Зелье монет (большое)',     desc:`15 продаж: +${Math.round(COIN_PCT*100)}% ₴ (до +${fmt(COIN_CAP)} ₴ за продажу)`, cost:55,  apply:()=>{ S.potions.coin += 15; return 'Зелье монет: +15 продаж'; }},
+  {id:'ghost',  ico:'👻', name:'Призрачный учитель',        desc:'Случайный редкий учитель',                 cost:50,  apply:()=>'Получен: '+giveRandom('rare').name},
+  {id:'dark',   ico:'🧙', name:'Тёмный наставник',          desc:'Случайный эпический учитель',              cost:150, apply:()=>'Получен: '+giveRandom('epic').name}
+];
+
+/* --- босс --- */
+function bossState(){
+  const mine = S.ev.dmg||0;
+  let total = mine, fighters = mine>0 ? 1 : 0;
+  lbPlayers.forEach(p=>{
+    if(userId && String(p.id)===String(userId)) return;
+    const d = (p.ev&&p.ev.dmg)||0; total += d; if(d>0) fighters++;
+  });
+  if(total >= BOSS_HP) S.ev.bossDown = true;
+  const dead = !!S.ev.bossDown;
+  return {total, fighters, dead, hpLeft: dead ? 0 : Math.max(0, BOSS_HP-total)};
+}
+function fmtLeft(ms){
+  const m = Math.max(0, Math.floor(ms/60000)), d=Math.floor(m/1440), h=Math.floor((m%1440)/60), mi=m%60;
+  return (d?d+' д ':'')+(h||d?h+' ч ':'')+mi+' мин';
+}
+
+/* --- топ --- */
+let evMode = 'candyTotal';
+function evRows(mode){
+  const rows = lbPlayers.map(p=> (userId && String(p.id)===String(userId)) ? Object.assign({}, p, {ev:S.ev}) : p);
+  if(userId && !rows.some(p=>String(p.id)===String(userId))) rows.push({id:userId, name:userName, ev:S.ev, st:defStats(), bal:S.bal, invCount:S.inv.length});
+  return rows.filter(p=>((p.ev&&p.ev[mode])||0)>0).sort((a,b)=>b.ev[mode]-a.ev[mode]);
+}
+function myTopRank(){
+  if(!userId) return 0;
+  const i = evRows('candyTotal').findIndex(p=>String(p.id)===String(userId));
+  return i<0 ? 0 : i+1;
+}
+
+function renderEvent(){
+  const bp = document.getElementById('bossPanel');
+  if(!bp) return;
+  const active = eventActive();
+  $('evTimer').textContent = active ? 'До конца ивента: '+fmtLeft(EVENT_END-Date.now()) : 'Ивент завершён';
+
+  /* босс */
+  const b = bossState();
+  const pctLeft = b.dead ? 0 : Math.max(0, b.hpLeft/BOSS_HP*100);
+  const phase = b.dead ? 'Побеждён! 🎉' : (pctLeft>66 ? 'Фаза 1 — Призрак проснулся' : pctLeft>33 ? 'Фаза 2 — Призрак злится 😡' : 'Фаза 3 — Призрак при смерти 💀');
+  const boss = Object.assign({}, byId('budko'), {emoji:'👻'});
+  let reward;
+  if(b.dead){
+    reward = S.ev.bossClaimed
+      ? '✅ Награда за победу уже получена.'
+      : `🏆 Призрак повержен! Награда: <b>${fmt(BOSS_REWARD.money)} ₴</b> + случайный мифический учитель.<button class="btn gold" data-boss-claim="1" ${(S.ev.dmg>0&&userId)?'':'disabled'}>${S.ev.dmg>0?'Забрать награду':'Нужно нанести хотя бы 1 урон'}</button>`;
+  }else if(!active){
+    reward = '😈 Время вышло — Призрак победил. Награды в этот раз нет.';
+  }else{
+    reward = `Награда всем, кто нанёс урон: <b>${fmt(BOSS_REWARD.money)} ₴</b> + случайный мифический учитель. Добейте Призрака до 31 октября!`;
+  }
+  bp.classList.toggle('dead', b.dead);
+  bp.innerHTML = `<div class="bossBox">
+    ${avatarHTML(boss,'bossAv')}
+    <div class="bossInfo">
+      <div class="bossName">Призрак БudkО</div>
+      <div class="bossPhase">${phase}</div>
+      <div class="hpBar"><i style="width:${pctLeft.toFixed(2)}%"></i><span>${fmt(b.hpLeft)} / ${fmt(BOSS_HP)} HP</span></div>
+      <div class="bossMeta">Ваш урон: <b>${fmt(S.ev.dmg||0)}</b> · бойцов: <b>${fmt(b.fighters)}</b><br>
+        Урон = потраченные ₴ на кейсы + ставки в апгрейдах. Бить босса можно, просто играя.</div>
+      <div class="bossReward">${reward}</div>
+    </div>
+  </div>`;
+
+  /* лавка */
+  const tk = Object.entries(S.tokens).filter(([,n])=>n>0).map(([id,n])=>`${(caseById(id)||{name:id}).name} ×${n}`).join(', ') || '—';
+  $('candyShop').innerHTML = `<div class="evStats">🍬 Конфет: <b>${fmt(S.candies)}</b> · 🛡️ Щитов: <b>${S.shield}</b><br>🎟️ Бесплатные кейсы: <b>${tk}</b><br>🍀 Зелье удачи: <b>${S.potions.luck}</b> откр. · 🪙 Зелье монет: <b>${S.potions.coin}</b> прод.<br>
+      Как получить: кейс <b>+1…+8</b>, удачный апгрейд <b>+3</b>, неудачный <b>+1</b>, 🎁 ежедневные награды (до 14 дней). 🌙 Ночью ×2 (кроме наград).</div>`
+    + CANDY_SHOP.map(it=>`<div class="shopItem"><div class="si">${it.ico}</div><div class="tx"><b>${it.name}</b><small>${it.desc}</small></div>
+        <button class="btn sm primary" data-candy-buy="${it.id}" ${S.candies>=it.cost?'':'disabled'}>${it.cost} 🍬</button></div>`).join('');
+
+  /* топ */
+  document.querySelectorAll('.evTab').forEach(el=>el.classList.toggle('active', el.dataset.ev===evMode));
+  const rows = evRows(evMode).slice(0,15);
+  $('evTop').innerHTML = rows.length ? rows.map((p,i)=>
+    `<div class="lbRow ${i===0?'top1':''}" data-player="${p.id}">
+       <div class="rank">${i===0?'👑':i+1}</div>
+       <div class="nm"><b>${p.name}</b><span class="sub">${evMode==='candyTotal'?'урон по боссу: '+fmt(p.ev.dmg||0):'конфет собрано: '+fmt(p.ev.candyTotal||0)}</span></div>
+       <div class="val">${evMode==='candyTotal'? fmt(p.ev.candyTotal)+' 🍬' : fmt(p.ev.dmg)+' HP'}</div>
+     </div>`).join('') : '<div class="empty">Пока никого. Откройте кейс — и вы в топе!</div>';
+  const rank = myTopRank();
+  let tr = `<div class="topPrizes"><b>Призы топ-3 по конфетам</b> (выдаются после 31 октября):<br>🥇 ${TOP_PRIZES[0].label}<br>🥈 ${TOP_PRIZES[1].label}<br>🥉 ${TOP_PRIZES[2].label}</div>`;
+  if(!active && rank>=1 && rank<=3){
+    tr += S.ev.topClaimed ? '<div class="topPrizes">✅ Приз топа получен.</div>'
+      : `<button class="btn gold" style="width:100%;margin-top:10px" data-top-claim="1">🏆 Забрать приз за ${rank} место</button>`;
+  }
+  $('topReward').innerHTML = tr;
+}
+
+document.addEventListener('click', e=>{
+  const buy = e.target.closest('[data-candy-buy]');
+  if(buy){
+    if(!requireAuth()) return;
+    const it = CANDY_SHOP.find(x=>x.id===buy.dataset.candyBuy);
+    if(!it || S.candies < it.cost){ toast('Не хватает конфет'); return; }
+    S.candies -= it.cost;
+    const msg = it.apply();
+    toast('🍬 '+msg);
+    refresh(); return;
+  }
+  if(e.target.closest('[data-boss-claim]')){
+    if(!requireAuth()) return;
+    const b = bossState();
+    if(!b.dead || S.ev.bossClaimed || !(S.ev.dmg>0)) return;
+    S.ev.bossClaimed = true; S.bal += BOSS_REWARD.money;
+    const t = giveRandom(BOSS_REWARD.rarity);
+    toast('🏆 Награда: '+fmt(BOSS_REWARD.money)+' ₴ и '+t.name+'!');
+    refresh(); return;
+  }
+  if(e.target.closest('[data-top-claim]')){
+    if(!requireAuth()) return;
+    const rank = myTopRank();
+    if(eventActive() || rank<1 || rank>3 || S.ev.topClaimed) return;
+    const pr = TOP_PRIZES[rank-1];
+    S.ev.topClaimed = true; S.bal += pr.money;
+    let extra = ''; if(pr.rarity){ extra = ' и '+giveRandom(pr.rarity).name; }
+    toast('🏆 Приз за '+rank+' место: '+fmt(pr.money)+' ₴'+extra);
+    refresh(); return;
+  }
+  const et = e.target.closest('.evTab');
+  if(et){ evMode = et.dataset.ev; renderEvent(); return; }
+});
+
+/* --- ночной бонус (каждый день 18:00–06:00) --- */
+let lastNight = null;
+function updateNight(){
+  const n = isNight(), now = new Date();
+  const bar = $('nightBar');
+  document.body.classList.toggle('night', n);
+  const target = new Date(now);
+  if(n){ if(now.getHours()>=18) target.setDate(target.getDate()+1); target.setHours(6,0,0,0); }
+  else { target.setHours(18,0,0,0); }
+  const left = fmtLeft(target-now);
+  if(n){
+    bar.className = 'nightBar on';
+    bar.innerHTML = `🌙 <b>НОЧНОЙ БОНУС активен!</b> Мутации ×${NIGHT_MUT} · конфеты ×${NIGHT_CANDY} · закончится через ${left}`;
+  }else{
+    bar.className = 'nightBar';
+    bar.innerHTML = `☀️ Ночной бонус (мутации ×${NIGHT_MUT}, конфеты ×${NIGHT_CANDY}) включится в 18:00 — через ${left}`;
+  }
+  if(lastNight !== null && lastNight !== n) refresh();
+  lastNight = n;
+  renderEvent();
+}
+setInterval(updateNight, 30000);
+
 /* ---------- главное меню: отдельные вкладки ---------- */
-const VIEWS = {cases:'viewCases', inv:'invSection', arena:'arenaSection', shop:'shopSection', board:'boardSection'};
+const VIEWS = {cases:'viewCases', inv:'invSection', arena:'arenaSection', shop:'shopSection', event:'eventSection', board:'boardSection'};
 /* на вкладке «Апгрейд» показываем сразу инвентарь + апгрейдер + магазин */
 const VIEW_GROUPS = {arena:['arena','inv','shop']};
 function showView(name){
@@ -1266,6 +1840,7 @@ function showView(name){
   document.querySelectorAll('.navItem').forEach(el=>el.classList.toggle('active', el.dataset.nav===name));
   const grid = document.querySelector('.grid');
   if(grid) grid.classList.toggle('trio', name==='arena');
+  if(name==='event'){ renderEvent(); loadLeaderboard(); }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 document.addEventListener('click', e=>{
@@ -1274,6 +1849,44 @@ document.addEventListener('click', e=>{
 });
 showView('cases');
 
+/* ---------- 🎃 Хеллоуин: летающие летучие мыши, призраки, тыквы + обратный отсчёт ---------- */
+(function(){
+  const layer = document.getElementById('hwLayer');
+  if(layer && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    const icons = ['🦇','👻','🎃','🦇','🕷️','🍬'];
+    const n = window.innerWidth < 700 ? 9 : 16;
+    for(let i=0;i<n;i++){
+      const el = document.createElement('div');
+      el.className = 'fl';
+      el.textContent = icons[i % icons.length];
+      const size = 16 + Math.random()*22;
+      el.style.left = (Math.random()*100)+'vw';
+      el.style.fontSize = size+'px';
+      el.style.setProperty('--dx', (Math.random()*120-60)+'px');
+      el.style.setProperty('--rot', (Math.random()*540-270)+'deg');
+      el.style.animation = `hwFall ${14+Math.random()*16}s linear ${-Math.random()*30}s infinite`;
+      layer.appendChild(el);
+    }
+  }
+  const b = document.getElementById('hwBanner'), t = document.getElementById('hwBannerText');
+  if(b && t){
+    const now = new Date();
+    const hw = new Date(now.getFullYear(), 9, 31);
+    const days = Math.ceil((hw - new Date(now.getFullYear(), now.getMonth(), now.getDate()))/86400000);
+    if(days > 0 && days <= 30){ t.innerHTML = `До Хеллоуина осталось <b>${days}</b> ${days%10===1&&days!==11?'день':(days%10>=2&&days%10<=4&&(days<10||days>20))?'дня':'дней'} — готовьте кошельки!`; b.hidden = false; }
+    else if(days === 0){ t.innerHTML = '<b>Сегодня Хеллоуин!</b> Счастливых и жутких дропов!'; b.hidden = false; }
+  }
+})();
+
+$('dailyBtn').onclick = ()=>{ if(requireAuth()) openDaily(); };
+$('dailyClaim').onclick = claimDailyReward;
+$('dailyClose').onclick = closeDaily;
+$('updClose').onclick = closeUpdate;
+$('updOpen').onclick = openUpdate;
+$('dailyOverlay').addEventListener('click', e=>{ if(e.target.id==='dailyOverlay') closeDaily(); });
+setInterval(renderDailyBtn, 60000);
+
+updateNight();
 boot();
 loadLeaderboard();
 </script>
