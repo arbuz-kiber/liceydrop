@@ -1,4 +1,3 @@
--- v2
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -473,6 +472,10 @@ body.night{background:
   background:rgba(157,77,255,.12);border:1px solid rgba(157,77,255,.4);
   filter:saturate(.6) hue-rotate(250deg) drop-shadow(0 0 22px rgba(157,77,255,.8));opacity:.92;animation:bossFloat 3.4s ease-in-out infinite}
 .boss.dead .bossAv{filter:grayscale(1);opacity:.45;animation:none}
+.boss.drac{border-color:rgba(255,60,90,.5);background:linear-gradient(160deg,rgba(255,60,90,.15),var(--panel) 55%)}
+.boss.drac .bossAv{filter:saturate(1.25) drop-shadow(0 0 22px rgba(255,40,70,.85));opacity:1}
+.boss.drac .bossName{color:#ff5c7a;text-shadow:0 0 18px rgba(255,40,70,.5)}
+.boss.drac.dead .bossAv{filter:grayscale(1);opacity:.45;animation:none}
 @keyframes bossFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
 .bossInfo{flex:1;min-width:0}
 .bossName{font-family:'Creepster','Space Grotesk',cursive;font-size:34px;letter-spacing:.05em;color:var(--accent2);text-shadow:0 0 18px rgba(255,122,26,.4);line-height:1.1}
@@ -676,10 +679,11 @@ body.night{background:
   <p class="note">Копите 🍬 конфеты, меняйте их в лавке и вместе с другими игроками побеждайте <b>Призрака БudkО</b>. Ночью (18:00–06:00) конфет в 2 раза больше!</p>
   <div style="margin-bottom:12px"><button class="btn sm" id="updOpen">📜 Что нового</button></div>
   <div class="panel boss" id="bossPanel"></div>
+  <div class="panel boss drac" id="bossPanel2" style="display:none"></div>
   <div class="evGrid">
     <section class="panel"><h3>🍬 Конфетная лавка</h3><div id="candyShop"></div></section>
     <section class="panel"><h3>🏆 Хеллоуинский топ</h3>
-      <div class="lbTabs"><div class="evTab active" data-ev="candyTotal">Конфеты</div><div class="evTab" data-ev="dmg">Урон по боссу</div></div>
+      <div class="lbTabs"><div class="evTab active" data-ev="candyTotal">Конфеты</div><div class="evTab" data-ev="dmg">Урон по боссам</div></div>
       <div class="lbList" id="evTop"></div>
       <div id="topReward"></div>
     </section>
@@ -857,8 +861,8 @@ const col = r => getComputedStyle(document.documentElement).getPropertyValue('--
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 const pct = c => (c*100 < 0.01 ? (c*100).toFixed(4) : (c*100).toFixed(2)).replace(/\.?0+$/,'') + '%';
 
-function defEv(){ return {dmg:0, candyTotal:0, lastDaily:'', bossDown:false, bossClaimed:false, topClaimed:false}; }
-const UPDATE_ID = 'halloween-2026-10-25';   // сменить строку — окно «Что нового» покажется всем снова
+function defEv(){ return {dmg:0, dmg2:0, candyTotal:0, lastDaily:'', bossDown:false, bossClaimed:false, boss2Down:false, boss2Claimed:false, topClaimed:false}; }
+const UPDATE_ID = 'halloween-2026-10-26';   // сменить строку — окно «Что нового» покажется всем снова
 function defDaily(){ return {day:0, last:'', total:0}; }          // day = последний полученный день цикла (0–14)
 function defPotions(){ return {luck:0, coin:0}; }                 // остаток зарядов зелий
 const defStats = () => ({
@@ -1483,6 +1487,7 @@ function showProfile(id){
     ['Лучшая карточка', s.bestName ? `${s.bestName} — ${fmt(s.bestPrice)} ₴` : '—'],
     ['🍬 Конфет собрано (ивент)', fmt((p.ev&&p.ev.candyTotal)||0)],
     ['👻 Урон по Призраку БudkО', fmt((p.ev&&p.ev.dmg)||0)],
+    ['🧛‍♀️ Урон по Наталии Дракуле', fmt((p.ev&&p.ev.dmg2)||0)],
     ['Кейсов открыто', fmt(s.casesOpened||0)],
     ['Апгрейдов сделано', fmt(s.upgrades||0)],
     ['Удачных апгрейдов', `${fmt(s.upgradesWon||0)} (${winRate}%)`],
@@ -1504,8 +1509,28 @@ setInterval(()=>loadLeaderboard(), 60000);
 
 /* ================= 👻 ИВЕНТ: конфеты, босс, топ, ночной бонус ================= */
 const EVENT_END = new Date(2026, 9, 31, 23, 59, 59);   // конец ивента (31 октября, 23:59:59 по времени игрока)
-const BOSS_HP = 1500000;                              // общее здоровье Призрака БudkО (можно менять)
-const BOSS_REWARD = {money:10000, rarity:'mythic'};   // награда каждому, кто нанёс урон
+const BOSSES = [                                      // боссы идут по очереди: второй открывается после смерти первого
+  {key:'ghost', dmg:'dmg',  down:'bossDown',  claimed:'bossClaimed',  hp:1500000, name:'Призрак БudkО',   tid:'budko',    emoji:'👻',
+   reward:{money:10000, rarity:'mythic'},    rname:'мифический',
+   phases:['Фаза 1 — Призрак проснулся','Фаза 2 — Призрак злится 😡','Фаза 3 — Призрак при смерти 💀','Побеждён! 🎉'],
+   win:'🏆 Призрак повержен!', lose:'😈 Время вышло — Призрак победил. Награды в этот раз нет.'},
+  {key:'drac',  dmg:'dmg2', down:'boss2Down', claimed:'boss2Claimed', hp:7500000, name:'Наталия Дракула', tid:'nat-tech', emoji:'🧛‍♀️',
+   reward:{money:50000, rarity:'legendary'}, rname:'легендарный',            // максимум награды
+   scale:{full:3750000, min:500, tiers:[{from:1, rarity:'epic'}, {from:750000, rarity:'mythic'}, {from:3750000, rarity:'legendary'}]},   // награда растёт с вашим уроном; максимум при full = половина HP босса (7 500 000 / 2)
+   phases:['Фаза 1 — Дракула проснулась 🦇','Фаза 2 — Дракула жаждет крови 🩸','Фаза 3 — Дракула при смерти 💀','Побеждена! 🎉'],
+   win:'🏆 Наталия Дракула повержена!', lose:'🧛‍♀️ Время вышло — Дракула победила. Награды в этот раз нет.'}
+];
+const RNAME = {common:'обычный', rare:'редкий', epic:'эпический', mythic:'мифический', legendary:'легендарный'};
+function bossReward(i, dmg){                          // награда зависит от нанесённого урона (если у босса есть scale)
+  const B = BOSSES[i];
+  if(!B.scale) return {money:B.reward.money, rarity:B.reward.rarity};
+  const sc = B.scale, d = Math.max(0, dmg||0);
+  const money = Math.min(B.reward.money, Math.max(sc.min, Math.round(d/sc.full*B.reward.money/100)*100));
+  let rarity = sc.tiers[0].rarity;
+  sc.tiers.forEach(t=>{ if(d>=t.from) rarity = t.rarity; });
+  return {money, rarity};
+}
+const BOSS_HP = BOSSES[0].hp, BOSS_REWARD = BOSSES[0].reward;   // (первый босс — для совместимости)
 const TOP_PRIZES = [
   {money:50000, rarity:'legendary', label:'50 000 ₴ + случайный легендарный'},
   {money:25000, rarity:'mythic',    label:'25 000 ₴ + случайный мифический'},
@@ -1529,7 +1554,11 @@ function addCandies(n){
   S.candies += k; S.ev.candyTotal += k; candyPop(k);
   return k;
 }
-function dealDamage(n){ if(eventActive() && n>0) S.ev.dmg += Math.round(n); }
+function dealDamage(n){                              // урон идёт по Призраку, а после его смерти — по Наталии Дракуле
+  if(!eventActive() || n<=0) return;
+  if(bossState(0).dead){ if(!bossState(1).dead) S.ev.dmg2 = (S.ev.dmg2||0) + Math.round(n); }   // после смерти Дракулы урон не копится
+  else S.ev.dmg += Math.round(n);
+}
 /* --- 🎁 ежедневные награды (цикл 14 дней; пропуск дня сбрасывает серию) --- */
 const DAILY_REWARDS = [
   {ico:'💰', txt:'300 ₴ + 5 🍬',                          money:300, candies:5},
@@ -1614,8 +1643,8 @@ function renderUpdate(){
   <div class="updSec"><h4>🎃 Хеллоуин-ивент (до 31 октября, 23:59)</h4><ul>
     <li>Копите <b>🍬 конфеты</b>: кейсы дают <b>+1 / +2 / +4 / +8</b> (Стартовый / Лицея / Директора / Секретный), удачный апгрейд <b>+3</b>, неудачный <b>+1</b>.</li>
     <li><b>🌙 Ночной бонус</b> каждый день с 18:00 до 06:00: конфет <b>×${NIGHT_CANDY}</b>, шанс мутаций <b>×${NIGHT_MUT}</b>.</li>
-    <li><b>👻 Босс — Призрак БudkО</b>: общее здоровье на всех игроков — <b>${fmt(BOSS_HP)} HP</b>. Урон по нему — это ₴, потраченные на кейсы и ставки в апгрейдах. Бить босса можно, просто играя.</li>
-    <li>Победим Призрака до конца ивента — каждый, кто нанёс хоть 1 урона, получит <b>${fmt(BOSS_REWARD.money)} ₴</b> и случайного <b>мифического</b> учителя.</li>
+    <li><b>👻 Босс 1 — Призрак БudkО</b> (<b>${fmt(BOSSES[0].hp)} HP</b> на всех игроков). Урон по боссу — это ₴, потраченные на кейсы и ставки в апгрейдах, бить можно просто играя. Победа: каждому, кто нанёс урон, — <b>${fmt(BOSSES[0].reward.money)} ₴</b> и случайный <b>мифический</b> учитель.</li>
+    <li><b>🧛‍♀️ Босс 2 — Наталия Дракула</b> (Наталия Технолоджия): появляется после победы над Призраком, здоровье в <b>5 раз больше</b> — <b>${fmt(BOSSES[1].hp)} HP</b>. Урон по ней считается отдельно и только после смерти Призрака. Награда <b>зависит от вашего урона</b>: от ${fmt(BOSSES[1].scale.min)} ₴ и эпического учителя, мифический — от ${fmt(BOSSES[1].scale.tiers[1].from)} урона, а максимум — <b>${fmt(BOSSES[1].reward.money)} ₴ и легендарный</b> учитель — при ${fmt(BOSSES[1].scale.full)} урона.</li>
     <li><b>🏆 Хеллоуинский топ</b> по конфетам. Призы топ-3 выдаются после 31 октября: 🥇 ${TOP_PRIZES[0].label}; 🥈 ${TOP_PRIZES[1].label}; 🥉 ${TOP_PRIZES[2].label}.</li>
     <li>Вкладка <b>«Ивент»</b> — там босс, лавка и топ.</li>
   </ul></div>
@@ -1686,16 +1715,56 @@ const CANDY_SHOP = [
 ];
 
 /* --- босс --- */
-function bossState(){
-  const mine = S.ev.dmg||0;
+function bossState(i){
+  const B = BOSSES[i||0], f = B.dmg;
+  const mine = S.ev[f]||0;
   let total = mine, fighters = mine>0 ? 1 : 0;
   lbPlayers.forEach(p=>{
     if(userId && String(p.id)===String(userId)) return;
-    const d = (p.ev&&p.ev.dmg)||0; total += d; if(d>0) fighters++;
+    const d = (p.ev&&p.ev[f])||0; total += d; if(d>0) fighters++;
   });
-  if(total >= BOSS_HP) S.ev.bossDown = true;
-  const dead = !!S.ev.bossDown;
-  return {total, fighters, dead, hpLeft: dead ? 0 : Math.max(0, BOSS_HP-total)};
+  if(total >= B.hp) S.ev[B.down] = true;
+  const dead = !!S.ev[B.down];
+  return {total, fighters, dead, hpLeft: dead ? 0 : Math.max(0, B.hp-total)};
+}
+function renderBoss(i){
+  const el = document.getElementById(i===0 ? 'bossPanel' : 'bossPanel'+(i+1)); if(!el) return;
+  const B = BOSSES[i];
+  if(i>0 && !bossState(i-1).dead){ el.style.display='none'; return; }
+  el.style.display = '';
+  const b = bossState(i), active = eventActive();
+  const pctLeft = b.dead ? 0 : Math.max(0, b.hpLeft/B.hp*100);
+  const phase = b.dead ? B.phases[3] : (pctLeft>66 ? B.phases[0] : pctLeft>33 ? B.phases[1] : B.phases[2]);
+  const boss = Object.assign({}, byId(B.tid), {emoji:B.emoji});
+  const mine = S.ev[B.dmg]||0;
+  const my = bossReward(i, mine), rtxt = r => `<b>${fmt(r.money)} ₴</b> + случайный ${RNAME[r.rarity]} учитель`;
+  let reward;
+  if(b.dead){
+    reward = S.ev[B.claimed]
+      ? '✅ Награда за победу уже получена.'
+      : `${B.win} Ваша награда${B.scale?' по нанесённому урону':''}: ${rtxt(my)}.<button class="btn gold" data-boss-claim="${i}" ${(mine>0&&userId)?'':'disabled'}>${mine>0?'Забрать награду':'Нужно нанести хотя бы 1 урон'}</button>`;
+  }else if(!active){
+    reward = B.lose;
+  }else if(B.scale){
+    const sc = B.scale;
+    reward = `Награда зависит от вашего урона: от <b>${fmt(sc.min)} ₴</b> и эпического учителя до <b>${fmt(B.reward.money)} ₴ + ${RNAME[B.reward.rarity]} учитель</b> (максимум при <b>${fmt(sc.full)}</b> урона; мифический — от ${fmt(sc.tiers[1].from)}).`
+      + (mine>0 ? `<br>Сейчас у вас: ${rtxt(my)}.` + (mine<sc.full ? ` До максимума: <b>${fmt(sc.full-mine)}</b> урона.` : ' 🔥 Максимум!') : '')
+      + `<br>Добейте босса до 31 октября!`;
+  }else{
+    reward = `Награда всем, кто нанёс урон: ${rtxt(my)}. Добейте босса до 31 октября!`;
+  }
+  el.classList.toggle('dead', b.dead);
+  el.innerHTML = `<div class="bossBox">
+    ${avatarHTML(boss,'bossAv')}
+    <div class="bossInfo">
+      <div class="bossName">${B.name}</div>
+      <div class="bossPhase">${i>0?'Босс 2 · ':''}${phase}</div>
+      <div class="hpBar"><i style="width:${pctLeft.toFixed(2)}%"></i><span>${fmt(b.hpLeft)} / ${fmt(B.hp)} HP</span></div>
+      <div class="bossMeta">Ваш урон: <b>${fmt(mine)}</b> · бойцов: <b>${fmt(b.fighters)}</b><br>
+        Урон = потраченные ₴ на кейсы + ставки в апгрейдах. Бить босса можно, просто играя.${i>0?' Урон по этому боссу считается только после победы над Призраком.':''}</div>
+      <div class="bossReward">${reward}</div>
+    </div>
+  </div>`;
 }
 function fmtLeft(ms){
   const m = Math.max(0, Math.floor(ms/60000)), d=Math.floor(m/1440), h=Math.floor((m%1440)/60), mi=m%60;
@@ -1707,7 +1776,8 @@ let evMode = 'candyTotal';
 function evRows(mode){
   const rows = lbPlayers.map(p=> (userId && String(p.id)===String(userId)) ? Object.assign({}, p, {ev:S.ev}) : p);
   if(userId && !rows.some(p=>String(p.id)===String(userId))) rows.push({id:userId, name:userName, ev:S.ev, st:defStats(), bal:S.bal, invCount:S.inv.length});
-  return rows.filter(p=>((p.ev&&p.ev[mode])||0)>0).sort((a,b)=>b.ev[mode]-a.ev[mode]);
+  const val = p => mode==='dmg' ? ((p.ev&&p.ev.dmg)||0)+((p.ev&&p.ev.dmg2)||0) : ((p.ev&&p.ev[mode])||0);
+  return rows.filter(p=>val(p)>0).sort((a,b)=>val(b)-val(a));
 }
 function myTopRank(){
   if(!userId) return 0;
@@ -1721,33 +1791,8 @@ function renderEvent(){
   const active = eventActive();
   $('evTimer').textContent = active ? 'До конца ивента: '+fmtLeft(EVENT_END-Date.now()) : 'Ивент завершён';
 
-  /* босс */
-  const b = bossState();
-  const pctLeft = b.dead ? 0 : Math.max(0, b.hpLeft/BOSS_HP*100);
-  const phase = b.dead ? 'Побеждён! 🎉' : (pctLeft>66 ? 'Фаза 1 — Призрак проснулся' : pctLeft>33 ? 'Фаза 2 — Призрак злится 😡' : 'Фаза 3 — Призрак при смерти 💀');
-  const boss = Object.assign({}, byId('budko'), {emoji:'👻'});
-  let reward;
-  if(b.dead){
-    reward = S.ev.bossClaimed
-      ? '✅ Награда за победу уже получена.'
-      : `🏆 Призрак повержен! Награда: <b>${fmt(BOSS_REWARD.money)} ₴</b> + случайный мифический учитель.<button class="btn gold" data-boss-claim="1" ${(S.ev.dmg>0&&userId)?'':'disabled'}>${S.ev.dmg>0?'Забрать награду':'Нужно нанести хотя бы 1 урон'}</button>`;
-  }else if(!active){
-    reward = '😈 Время вышло — Призрак победил. Награды в этот раз нет.';
-  }else{
-    reward = `Награда всем, кто нанёс урон: <b>${fmt(BOSS_REWARD.money)} ₴</b> + случайный мифический учитель. Добейте Призрака до 31 октября!`;
-  }
-  bp.classList.toggle('dead', b.dead);
-  bp.innerHTML = `<div class="bossBox">
-    ${avatarHTML(boss,'bossAv')}
-    <div class="bossInfo">
-      <div class="bossName">Призрак БudkО</div>
-      <div class="bossPhase">${phase}</div>
-      <div class="hpBar"><i style="width:${pctLeft.toFixed(2)}%"></i><span>${fmt(b.hpLeft)} / ${fmt(BOSS_HP)} HP</span></div>
-      <div class="bossMeta">Ваш урон: <b>${fmt(S.ev.dmg||0)}</b> · бойцов: <b>${fmt(b.fighters)}</b><br>
-        Урон = потраченные ₴ на кейсы + ставки в апгрейдах. Бить босса можно, просто играя.</div>
-      <div class="bossReward">${reward}</div>
-    </div>
-  </div>`;
+  /* боссы */
+  BOSSES.forEach((_,i)=>renderBoss(i));
 
   /* лавка */
   const tk = Object.entries(S.tokens).filter(([,n])=>n>0).map(([id,n])=>`${(caseById(id)||{name:id}).name} ×${n}`).join(', ') || '—';
@@ -1762,8 +1807,8 @@ function renderEvent(){
   $('evTop').innerHTML = rows.length ? rows.map((p,i)=>
     `<div class="lbRow ${i===0?'top1':''}" data-player="${p.id}">
        <div class="rank">${i===0?'👑':i+1}</div>
-       <div class="nm"><b>${p.name}</b><span class="sub">${evMode==='candyTotal'?'урон по боссу: '+fmt(p.ev.dmg||0):'конфет собрано: '+fmt(p.ev.candyTotal||0)}</span></div>
-       <div class="val">${evMode==='candyTotal'? fmt(p.ev.candyTotal)+' 🍬' : fmt(p.ev.dmg)+' HP'}</div>
+       <div class="nm"><b>${p.name}</b><span class="sub">${evMode==='candyTotal'?'урон по боссам: '+fmt((p.ev.dmg||0)+(p.ev.dmg2||0)):'конфет собрано: '+fmt(p.ev.candyTotal||0)}</span></div>
+       <div class="val">${evMode==='candyTotal'? fmt(p.ev.candyTotal)+' 🍬' : fmt((p.ev.dmg||0)+(p.ev.dmg2||0))+' HP'}</div>
      </div>`).join('') : '<div class="empty">Пока никого. Откройте кейс — и вы в топе!</div>';
   const rank = myTopRank();
   let tr = `<div class="topPrizes"><b>Призы топ-3 по конфетам</b> (выдаются после 31 октября):<br>🥇 ${TOP_PRIZES[0].label}<br>🥈 ${TOP_PRIZES[1].label}<br>🥉 ${TOP_PRIZES[2].label}</div>`;
@@ -1785,13 +1830,16 @@ document.addEventListener('click', e=>{
     toast('🍬 '+msg);
     refresh(); return;
   }
-  if(e.target.closest('[data-boss-claim]')){
+  const bc = e.target.closest('[data-boss-claim]');
+  if(bc){
     if(!requireAuth()) return;
-    const b = bossState();
-    if(!b.dead || S.ev.bossClaimed || !(S.ev.dmg>0)) return;
-    S.ev.bossClaimed = true; S.bal += BOSS_REWARD.money;
-    const t = giveRandom(BOSS_REWARD.rarity);
-    toast('🏆 Награда: '+fmt(BOSS_REWARD.money)+' ₴ и '+t.name+'!');
+    const i = +bc.dataset.bossClaim, B = BOSSES[i]; if(!B) return;
+    const b = bossState(i);
+    if(!b.dead || S.ev[B.claimed] || !((S.ev[B.dmg]||0)>0)) return;
+    const r = bossReward(i, S.ev[B.dmg]);
+    S.ev[B.claimed] = true; S.bal += r.money;
+    const t = giveRandom(r.rarity);
+    toast('🏆 Награда: '+fmt(r.money)+' ₴ и '+t.name+'!');
     refresh(); return;
   }
   if(e.target.closest('[data-top-claim]')){
